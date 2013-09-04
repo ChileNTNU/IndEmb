@@ -27,8 +27,8 @@ int main(void)
 {
   unsigned int a;
    
-  //DDRA = 0x01;
-  //PORTA = 0x01;
+  //DDRA = 0xFF;
+  //PORTA = 0x10;
   
   UART_Init();  
   SRAM_Init();

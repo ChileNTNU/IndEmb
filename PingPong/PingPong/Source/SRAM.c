@@ -17,7 +17,8 @@
 
 void SRAM_Init(void)
 {
-  MCUCR |= (1 << SRE)|(1 << SRW11)|(1 << SRW10);  // Enable external memory
+  MCUCR |= (1 << SRE);  // Enable external memory
+  //MCUCR |= (1 << SRE)|(1 << SRW11)|(1 << SRW10);  // Enable external memory
   //MCUCR = 0b11000000;
   //EMCUCR = 0b00001110;
   SFIOR |= (1 << XMM2); // release Pins for JTAG
@@ -46,11 +47,12 @@ void SRAM_test(void)
     
   for (i = 0; i < 0x800; ++i)
   {
-    testvalue = ~(i % 256);
-    ext_ram[i] = testvalue;
+    //testvalue = ~(i % 256);
+    testvalue = 0xD1;
+    ext_ram[i] = testvalue;    
     if (ext_ram[i] != testvalue)
     {
-      sprintf(Buffer_string,"SRAM error (write phase): ext_ram[%d] = %02X (should be %02X)\r\n", i, ext_ram[i], testvalue);
+      sprintf(Buffer_string,"SRAM error (write phase): ext_ram[%02X] = %02X (should be %02X)\r\n", i, ext_ram[i], testvalue);
       //UART_put_string("SRAM error (write phase): ext_ram[%d] = %02X (should be %02X)\r\n", i, ext_ram[i], testvalue);
       UART_put_string(Buffer_string);
       ++werrors;
@@ -59,10 +61,11 @@ void SRAM_test(void)
   
   for (i = 0; i < 0x800; ++i)
   {
-    testvalue = ~(i % 256);
+    //testvalue = ~(i % 256);
+    testvalue = 0xD1;
     if (ext_ram[i] != testvalue)
     {
-      sprintf(Buffer_string,"SRAM error (read phase): ext_ram[%d] = %02X (should be %02X)\r\n", i, ext_ram[i], testvalue);
+      sprintf(Buffer_string,"SRAM error (read phase): ext_ram[%02X] = %02X (should be %02X)\r\n", i, ext_ram[i], testvalue);
       //UART_put_string("SRAM error (read phase): ext_ram[%d] = %02X (should be %02X)\r\n", i, ext_ram[i], testvalue);
       UART_put_string(Buffer_string);
       ++rerrors;
@@ -96,3 +99,4 @@ void LATCH_test(void)
   PORTA = (0<<PA0);
   */
 }
+
