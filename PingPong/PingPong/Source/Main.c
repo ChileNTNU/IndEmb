@@ -17,6 +17,8 @@
 #include "../Header/UART.h"
 #include "../Header/SRAM.h"
 #include <avr/interrupt.h>
+#include "../Header/ADC.h"
+#include <stdio.h>
 
 /***************************************************************************//**
  * @brief 	Main software routine
@@ -25,18 +27,22 @@
 *******************************************************************************/
 int main(void)
 {
-  unsigned int a;
-   
+  unsigned char data; 
+  char buffer[25]; 
   //DDRA = 0xFF;
   //PORTA = 0x10;
   
   UART_Init();  
-  SRAM_Init();
+  ExMem_Init();
   
   
-  //UART_put_string("Hola\r\n");
-  SRAM_test();
-
+  UART_put_string("--- Hola ---\r\n");
+  //SRAM_test();
+  
+  data = ADC_Read(0);
+  sprintf(buffer,"ADC value: %d\r\n",data);
+  UART_put_string(buffer);
+  
   //EnableInterrupts();
       
   return 0;

@@ -5,13 +5,13 @@
  *   @author Tobias Franzen and Emilio Garcia
 *******************************************************************************/
 
-#ifndef SRAM_H_
-#define SRAM_H_
+#ifndef ADC_H_
+#define ADC_H_
 
 /******************************************************************************/
 /* Include Files                                                              */
 /******************************************************************************/
-
+#include "../Header/GlobalDef.h"
 
 /******************************************************************************/
 /* Definitions                                                                */
@@ -23,8 +23,10 @@
 /* Function prototypes                                                        */
 /******************************************************************************/
 
-void ExMem_Init(void);
-void SRAM_test(void);
-void LATCH_test(void);
+uint8_t ADC_Read(uint8_t channel);
 
-#endif /* SRAM_H_ */
+
+
+
+
+#endif /* ADC_H_ */
