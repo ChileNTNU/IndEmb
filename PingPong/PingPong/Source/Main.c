@@ -28,37 +28,35 @@
 int main(void)
 {
   unsigned char data; 
-  char buffer[25]; 
   //DDRA = 0xFF;
   //PORTA = 0x10;
   
   UART_Init();  
   ExMem_Init();
+  fdevopen(UART_put_char, NULL);    
+  EnableInterrupts();
   
+  printf("--- Hola ---\r\n");
+  SRAM_test();  
   
-  UART_put_string("--- Hola ---\r\n");
-  //SRAM_test();
+  data = ADC_Read(ADC_CH1);
+  printf("ADC value ch1: %d\r\n",data);
   
-  data = ADC_Read(0);
-  sprintf(buffer,"ADC value: %d\r\n",data);
-  UART_put_string(buffer);
-  
-  //EnableInterrupts();
+  data = ADC_Read(ADC_CH2);
+  printf("ADC valuech2: %d\r\n",data);
       
   return 0;
   
   /*
   while(1)
-  {    
-    
+  {        
 	  
     if (RxData == 0x41)
     {
       PORTA = ~PORTA;
       RxData = 0x00;
     }
-    
-    //LATCH_test();    
+        
   }
   */  
 }

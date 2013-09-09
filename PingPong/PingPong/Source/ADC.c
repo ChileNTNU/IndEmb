@@ -15,14 +15,14 @@
 #include "../Header/UART.h"
 #include <util/delay.h>
 
-uint8_t ADC_Read(uint8_t channel)
+unsigned char ADC_Read(unsigned char channel)
 {
-  uint8_t ADC_data;
-  volatile char *ADC_address = (char *) 0x1400;
+  unsigned char ADC_data;
+  volatile unsigned char * ADC_address = (unsigned char *) 0x1400;
   
-  ADC_address[0] = 0x40;
+  ADC_address[0] = channel;
   _delay_us(100);
   ADC_data = ADC_address[0];
    
-   return ADC_data;
+  return ADC_data;
 }

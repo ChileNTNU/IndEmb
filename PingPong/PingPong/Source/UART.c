@@ -36,10 +36,11 @@ void UART_Init(void)
   bfReg_RxD_Enable    =  C_ENABLE;          // Enables Receive
   bfReg_TxD_Enable    =  C_ENABLE;          // Enables Receive
   bfReg_RxInterEnable =  C_ENABLE;          // Enables Interrupt
-  bfReg_TxInterEnable =  C_ENABLE;          // Enables Interrupt
+  bfReg_TxInterEnable =  C_DISABLE;          // Enables Interrupt
 }
 
-int UART_put_char(char data_to_send)
+int UART_put_char(char data_to_send, FILE* DummyFile)
+//int UART_put_char(char data_to_send)
 {
     while(!bfReg_TxBufferEmpty)
     {      
@@ -48,14 +49,16 @@ int UART_put_char(char data_to_send)
     return 0;
 }
 
+/*
 void UART_put_string(char* s)
 {
   while (*s)
   {
-    UART_put_char(*s);
+    UART_put_char(*s,NULL);
     s++;
   }
 }  
+*/  
   
 /*
 ISR(USART0_TX_vect)
