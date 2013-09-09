@@ -33,14 +33,13 @@ void UART_Init(void)
              (1<<UCSZ00);             //Character size 8
   UBRR0L =  (uint8_t)UBRR_VALUE & 0xFF;
   UBRR0H =  (uint8_t)(UBRR_VALUE >> 8);     //Sets the Baud Rate High Byte
-  bfReg_RxD_Enable    =  C_ENABLE;          // Enables Receive
-  bfReg_TxD_Enable    =  C_ENABLE;          // Enables Receive
-  bfReg_RxInterEnable =  C_ENABLE;          // Enables Interrupt
-  bfReg_TxInterEnable =  C_DISABLE;          // Enables Interrupt
+  bfReg_RxD_Enable    =  C_ENABLE;          //Enables Receive
+  bfReg_TxD_Enable    =  C_ENABLE;          //Enables Transmission
+  bfReg_RxInterEnable =  C_ENABLE;          //Enables Reception Interrupt
+  bfReg_TxInterEnable =  C_DISABLE;         //Enables Transmission Interrupt
 }
 
 int UART_put_char(char data_to_send, FILE* DummyFile)
-//int UART_put_char(char data_to_send)
 {
     while(!bfReg_TxBufferEmpty)
     {      
@@ -48,17 +47,6 @@ int UART_put_char(char data_to_send, FILE* DummyFile)
     UDR0 = data_to_send;
     return 0;
 }
-
-/*
-void UART_put_string(char* s)
-{
-  while (*s)
-  {
-    UART_put_char(*s,NULL);
-    s++;
-  }
-}  
-*/  
   
 /*
 ISR(USART0_TX_vect)
@@ -74,4 +62,3 @@ ISR(USART0_RXC_vect)
   RxData = UDR0;
   PORTA ^= 0x01;
 }
-

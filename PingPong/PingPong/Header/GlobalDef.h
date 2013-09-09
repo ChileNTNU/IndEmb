@@ -39,6 +39,8 @@
 #define NOP()                 asm("nop")
 #define EnableInterrupts()    __asm__ __volatile__ ("sei" ::: "memory")
 
+enum Direction {Right,Left,Up,Down,Neutral};
+
 /******************************************************************************/
 /* Unions declarations                                                        */
 /******************************************************************************/
@@ -58,6 +60,21 @@ union   Ubyte_def
 {
 	struct  Sbit_def Ubit;
 	uint8_t      Ubyte;
+};
+
+struct JoyStruct
+{
+  signed char Xpos;  
+  signed char Ypos;
+  signed char Xoffset;
+  signed char Yoffset;
+  enum Direction Dir;
+};
+
+struct SlideStruct
+{
+  unsigned char LeftSlider;
+  unsigned char RightSlider;
 };
 
 typedef struct
