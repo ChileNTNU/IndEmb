@@ -1,13 +1,14 @@
 ﻿/*
- * Timmer.h
+ * InputOutput.h
  *
- * Created: 09/09/2013 10:52:24 a. m.
+ * Created: 11/09/2013 11:11:47 a. m.
  *  Author: Emilio García
  */ 
 
 
-#ifndef TIMMER_H_
-#define TIMMER_H_
+#ifndef INPUTOUTPUT_H_
+#define INPUTOUTPUT_H_
+
 /******************************************************************************/
 /* Include Files                                                              */
 /******************************************************************************/
@@ -16,25 +17,39 @@
 /******************************************************************************/
 /* Global variables                                                           */
 /******************************************************************************/
-extern volatile union Ubyte_def TimerFlags;
+extern union Ubyte_def ButtonsFlags;    
 
 /******************************************************************************/
 /* Definitions                                                                */
 /******************************************************************************/
-#define bf10msFlag              TimerFlags.Ubit.b0      // 10ms flag
-#define bf100msFlag             TimerFlags.Ubit.b1      // 100ms flag
-#define bf1sFlag                TimerFlags.Ubit.b2      // 1 sec flag
+#define bfJoyButtFlag           ButtonsFlags.Ubit.b0      // Flag for Joystick button
+#define bfLeftButtFlag          ButtonsFlags.Ubit.b1      // Flag for Left button
+#define bfRightButtFlag         ButtonsFlags.Ubit.b2      // Flag for Right button
+#define bfPrevJoyButt           ButtonsFlags.Ubit.b3      // Previous value for the Joystick button
+#define bfPrevLeftButt          ButtonsFlags.Ubit.b4      // Previous value for the Left button
+#define bfPrevRightButt         ButtonsFlags.Ubit.b5      // Previous value for the Right button
 
 /******************************************************************************/
 /* Macros for the registers                                                   */
 /******************************************************************************/
+#define bfJoyButtonDir   REGISTER_BIT(DDRB,1)
+#define bfJoyButton      REGISTER_BIT(PINB,1)
+#define bfJoyButtonPull  REGISTER_BIT(PORTB,1)
 
+#define bfLeftButtonDir  REGISTER_BIT(DDRB,2)
+#define bfLeftButton     REGISTER_BIT(PINB,2)
+
+#define bfRightButtonDir REGISTER_BIT(DDRB,3)
+#define bfRightButton    REGISTER_BIT(PINB,3)
+
+#define bfHeartbeatDir   REGISTER_BIT(DDRE,2)
+#define bfHeartbeat      REGISTER_BIT(PORTE,2)
 
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
+void IO_Init(void);
+void ReadButtons (void);
 
-void Timer_Init(void);
-
-#endif /* TIMMER_H_ */
+#endif /* INPUTOUTPUT_H_ */

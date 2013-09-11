@@ -19,7 +19,9 @@
 #include "../Header/SRAM.h"
 #include "../Header/ADC.h"
 #include "../Header/Timer.h"
+#include "../Header/InputOutput.h"
 #include <stdio.h>
+
 
 /***************************************************************************//**
  * @brief 	Main software routine
@@ -29,14 +31,12 @@
 int main(void)
 {  
   struct JoyStruct Joystick_main;
-  struct SlideStruct Sliders;
-  
-  DDRB = 0x02;
-  PORTB = 0x02;
-  
+  struct SlideStruct Sliders;  
+    
   UART_Init();
   ExMem_Init();  
   Timer_Init();
+  IO_Init();
   fdevopen(UART_put_char, NULL);  
     
   EnableInterrupts();
@@ -48,34 +48,43 @@ int main(void)
   
   while(1)
   {
+    if (bf10msFlag == C_ON)
+    {
+      bf10msFlag = C_OFF;
+      ReadButtons();
+    }
+    
     if(bf100msFlag == C_ON)
     {
       bf100msFlag = C_OFF;
-      PORTB ^= (1<<PB1);
-      
-      /*
-      ADC_array[0]= ADC_Read(ADC_CH1);
-      ADC_array[1]= ADC_Read(ADC_CH2);
-      ADC_array[2]= ADC_Read(ADC_CH3);
-      ADC_array[3]= ADC_Read(ADC_CH4);
-      */
+      bfHeartbeat = ~bfHeartbeat;      
       ReadJoystick(&Joystick_main);
-      ReadSliders(&Sliders);
+      ReadSliders(&Sliders);                  
+    }
+    
+    if(bf1sFlag == C_ON)
+    {
+      bf1sFlag = C_OFF;      
       
-      if(bf1sFlag == C_ON)
+      if (bfJoyButtFlag == C_ON)
       {
-        bf1sFlag = C_OFF;
+        bfJoyButtFlag = C_OFF;
         PrintJoystickPosition(&Joystick_main);
-        PrintSlidersPosition(&Sliders);
       }
       
-    }            
+      if (bfLeftButtFlag == C_ON)
+      {
+        bfLeftButtFlag = C_OFF;
+        PrintSlidersPosition(&Sliders);
+      }
+      else if (bfRightButtFlag == C_ON)
+      {
+        bfRightButtFlag = C_OFF;        
+        PrintSlidersPosition(&Sliders);
+      }                  
+    }
   }
-  
-  /*    
-  data = ADC_Read(ADC_CH2);
-  printf("ADC valuech2: %d\r\n",data);
-*/      
+        
   return 0;
   
   /*

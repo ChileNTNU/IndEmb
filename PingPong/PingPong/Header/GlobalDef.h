@@ -18,20 +18,17 @@
 /******************************************************************************/
 #define F_CPU                   (4915200)
 
-#define OFF                     (0)
-#define ON                      (1)
+#define C_OFF                     (0)
+#define C_ON                      (1)
 
-#define IN                      (0)
-#define OUT                     (1)
+#define C_IN                      (0)
+#define C_OUT                     (1)
 
-#define TRUE                    (1)
-#define FALSE                   (0)
+#define C_TRUE                    (1)
+#define C_FALSE                   (0)
 
 #define C_DISABLE               (0)
 #define C_ENABLE                (1)
-
-#define C_OFF                   (0)
-#define C_ON                    (1)
 
 #define C_LED_ON                (0)
 #define C_LED_OFF               (1)
