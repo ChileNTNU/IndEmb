@@ -1,7 +1,8 @@
 ﻿/***************************************************************************//**
- *   @file   UART.c
- *   @brief  Communication file
- *	 @date	 04.09.2013
+ *   @file   InputOutput.c
+ *   @brief  Implements functions to read the touch buttons and the joystick
+ *            button from the USB Multifunction card
+ *	 @date	 12.09.2013
  *   @author Tobias Franzen and Emilio Garcia
 *******************************************************************************/
 

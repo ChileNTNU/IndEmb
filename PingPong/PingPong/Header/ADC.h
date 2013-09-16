@@ -1,6 +1,6 @@
 ﻿/***************************************************************************//**
- *   @file   GlobalDef.h
- *   @brief  Global definitions header file
+ *   @file   ADC.h
+ *   @brief  Header file to ADC.c
  *	 @date	 27.08.2013
  *   @author Tobias Franzen and Emilio Garcia
 *******************************************************************************/

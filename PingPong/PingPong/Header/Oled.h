@@ -1,13 +1,14 @@
 ﻿/***************************************************************************//**
- *   @file   Timer.h
- *   @brief  Header file to Timer.c
- *	 @date	 09.09.2013
+ *   @file   Oled.h
+ *   @brief  Header file to Oled.c
+ *	 @date	 16.09.2013
  *   @author Tobias Franzen and Emilio Garcia
-*******************************************************************************/
+*******************************************************************************/  
 
 
-#ifndef TIMER_H_
-#define TIMER_H_
+#ifndef OLED_H_
+#define OLED_H_
+
 /******************************************************************************/
 /* Include Files                                                              */
 /******************************************************************************/
@@ -16,25 +17,31 @@
 /******************************************************************************/
 /* Global variables                                                           */
 /******************************************************************************/
-extern volatile union Ubyte_def TimerFlags;
+//extern union Ubyte_def ButtonsFlags;
 
 /******************************************************************************/
 /* Definitions                                                                */
 /******************************************************************************/
-#define bf10msFlag              TimerFlags.Ubit.b0      // 10ms flag
-#define bf100msFlag             TimerFlags.Ubit.b1      // 100ms flag
-#define bf1sFlag                TimerFlags.Ubit.b2      // 1 sec flag
+//#define bfJoyButtFlag           ButtonsFlags.Ubit.b0      // Flag for Joystick button
 
 /******************************************************************************/
 /* Macros for the registers                                                   */
 /******************************************************************************/
-
+//#define bfJoyButtonDir   REGISTER_BIT(DDRB,1)
 
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
+void write_c (unsigned char command);
+void write_d (unsigned char data_to_write);
+void Oled_Init(void);
+void Oled_put_char (unsigned char char_to_print);
+void Oled_home(void);
+void Oled_goto_line(unsigned char line);
+void Oled_clear_line(unsigned char line_to_clear);
+void Oled_clear_screen(void);
+void Oled_pos(unsigned char page_num, unsigned char Col_num);
 
-void Timer_Init(void);
 
-#endif /* TIMER_H_ */
+#endif /* OLED_H_ */

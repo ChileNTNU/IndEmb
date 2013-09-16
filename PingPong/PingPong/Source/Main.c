@@ -20,8 +20,10 @@
 #include "../Header/ADC.h"
 #include "../Header/Timer.h"
 #include "../Header/InputOutput.h"
+#include "../Header/Oled.h"
+//#include "../Header/font_5x7.h"
 #include <stdio.h>
-
+#include <avr/pgmspace.h>
 
 /***************************************************************************//**
  * @brief 	Main software routine
@@ -31,12 +33,13 @@
 int main(void)
 {  
   struct JoyStruct Joystick_main;
-  struct SlideStruct Sliders;  
+  struct SlideStruct Sliders;        
     
   UART_Init();
   ExMem_Init();  
   Timer_Init();
   IO_Init();
+  Oled_Init();
   fdevopen(UART_put_char, NULL);  
     
   EnableInterrupts();
@@ -70,17 +73,66 @@ int main(void)
       {
         bfJoyButtFlag = C_OFF;
         PrintJoystickPosition(&Joystick_main);
+        write_c(0xAE); // display off
       }
       
       if (bfLeftButtFlag == C_ON)
       {
         bfLeftButtFlag = C_OFF;
         PrintSlidersPosition(&Sliders);
+        Oled_clear_screen();
       }
-      else if (bfRightButtFlag == C_ON)
+      
+      if (bfRightButtFlag == C_ON)
       {
         bfRightButtFlag = C_OFF;        
         PrintSlidersPosition(&Sliders);
+        /*
+        //This is for horizontal addresing
+        write_c(0X20);       
+        write_c(0X00);
+        //This is for setting the active colums. In this case from Col_0 to Col_127                        
+        write_c(0x21);
+        write_c(0x00);
+        write_c(0x7F);
+        //This is for setting the page to print. In this case from Page_0 to Page-7
+        write_c(0x22);
+        write_c(0x00);
+        write_c(0x07);
+        
+        Oled_put_char('H');
+        Oled_put_char('o');
+        Oled_put_char('l');
+        Oled_put_char('a');
+        Oled_put_char('.');
+        Oled_put_char('.');
+        Oled_put_char('.');
+        */
+        Oled_home();        
+        Oled_put_char('H');
+        Oled_put_char('o');
+        Oled_put_char('l');
+        Oled_put_char('a');
+        Oled_put_char('.');
+        Oled_put_char('.');
+        Oled_put_char('.');
+        Oled_goto_line(1);
+        Oled_put_char('B');
+        Oled_put_char('O');
+        Oled_put_char('L');
+        Oled_put_char('A');
+        Oled_put_char('-');
+        Oled_put_char('-');
+        Oled_put_char('-');
+        Oled_pos(2,5);
+        Oled_put_char('V');
+        Oled_put_char('a');
+        Oled_put_char('t');
+        Oled_put_char('o');
+        Oled_put_char('!');
+        Oled_put_char('!');
+        Oled_put_char('!');
+        
       }                  
     }
   }

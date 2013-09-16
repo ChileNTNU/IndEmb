@@ -1,7 +1,7 @@
 ﻿/***************************************************************************//**
- *   @file   UART.c
- *   @brief  Communication file
- *	 @date	 04.09.2013
+ *   @file   Timer.c
+ *   @brief  Implements a 10ms Timer
+ *	 @date	 09.09.2013
  *   @author Tobias Franzen and Emilio Garcia
 *******************************************************************************/
 

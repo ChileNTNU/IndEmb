@@ -1,9 +1,9 @@
-﻿/*
- * InputOutput.h
- *
- * Created: 11/09/2013 11:11:47 a. m.
- *  Author: Emilio García
- */ 
+﻿/***************************************************************************//**
+ *   @file   InputOutput.h
+ *   @brief  Header file to InputOutput.c
+ *	 @date	 12.09.2013
+ *   @author Tobias Franzen and Emilio Garcia
+*******************************************************************************/ 
 
 
 #ifndef INPUTOUTPUT_H_

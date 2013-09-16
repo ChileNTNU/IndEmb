@@ -110,10 +110,25 @@
     <Compile Include="Header\ADC.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Header\font_4x6.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Header\font_5x7.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Header\font_5x7w.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Header\font_8x8.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Header\GlobalDef.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Header\InputOutput.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Header\Oled.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Header\SRAM.h">
@@ -132,6 +147,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Source\Main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Source\Oled.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Source\SRAM.c">

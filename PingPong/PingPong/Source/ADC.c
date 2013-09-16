@@ -1,6 +1,7 @@
 ﻿/***************************************************************************//**
- *   @file   UART.c
- *   @brief  Communication file
+ *   @file   ADC.c
+ *   @brief  Implements functions to get the position of the slider and the
+ *            joystick of the USB-Multifunction Card
  *	 @date	 04.09.2013
  *   @author Tobias Franzen and Emilio Garcia
 *******************************************************************************/
