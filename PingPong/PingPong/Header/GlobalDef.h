@@ -65,6 +65,7 @@ struct JoyStruct
   signed char Ypos;
   signed char Xoffset;
   signed char Yoffset;
+  enum Direction PrevDir;
   enum Direction Dir;
 };
 
@@ -72,6 +73,12 @@ struct SlideStruct
 {
   unsigned char LeftSlider;
   unsigned char RightSlider;
+};
+
+struct MenuStruct
+{
+  unsigned char SelectedMenu;
+  unsigned char Menu_to_print;
 };
 
 typedef struct

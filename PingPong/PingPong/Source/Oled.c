@@ -7,6 +7,7 @@
 *******************************************************************************/  
 
 #include "../Header/font_5x7.h"
+#include "../Header/Oled.h"
 #include <avr/pgmspace.h>
 
 
@@ -16,7 +17,7 @@ void write_c (unsigned char command)
   oled_command[0] = command;    
 }
 
-void write_d (unsigned char data_to_write)
+void write_d (char data_to_write)
 {
   volatile char *oled_data = (char *) 0x1200; // Address for writting a command to the OLED
   oled_data[0] = data_to_write;
@@ -48,7 +49,7 @@ void Oled_Init(void)
   write_c(0xaf); // display on
 }
 
-void Oled_put_char (unsigned char char_to_print)
+void Oled_put_char (char char_to_print)
 {
   unsigned char a;
   
@@ -66,7 +67,7 @@ void Oled_put_char (unsigned char char_to_print)
   
   for (a=0; a<5; a++)
   {
-    write_d(pgm_read_word(&myfont[char_to_print][a]));
+    write_d(pgm_read_byte(&myfont[char_to_print][a]));
   }
   write_d(0x00);
 }
@@ -131,12 +132,52 @@ void Oled_pos(unsigned char page_num, unsigned char Col_num)
 {
   unsigned char temp_Col;
   Oled_goto_line(page_num);
-  Col_num = Col_num & 0x0F;
-  Col_num = Col_num << 3;
+  if (Col_num > 21)
+  {
+    Col_num = 21;
+  }
+  //To obtain the column number, the character number has to be multiplied by the number of column each character uses
+  Col_num = Col_num * 6;
+  //Get the higher four bit of the column address  
   temp_Col = Col_num >> 4;
   temp_Col =  temp_Col & 0x0F;
+  //Set the command for the four higher column bits
   temp_Col = temp_Col | 0x10;
   write_c(temp_Col);
+  //Set the command for the four lower column bits 
   temp_Col = Col_num & 0x0F;  
   write_c(temp_Col);
+}
+
+void Oled_print( char * pChar_to_print)
+{
+  unsigned char i = 0;
+  while ((pChar_to_print[i] != '\0')&&(i < 21))
+  {
+    Oled_put_char(pChar_to_print[i]);
+    i++;
+  }    
+}
+
+void Oled_Refresh(struct MenuStruct * ptrMenu)
+{
+  unsigned char Menu_Lenght,i;
+  Menu_Lenght = pgm_read_byte(&MenuList[ptrMenu->Menu_to_print][MENU_SIZE_POS]);
+  Oled_clear_screen();
+  Oled_pos(1,5);
+  Oled_print((char *)pgm_read_word(&MenuList[ptrMenu->Menu_to_print][MENU_TITLE_POS]));  
+  Oled_pos(3,2);
+  for (i = 1; i <= Menu_Lenght; i++)
+  {
+    if (ptrMenu->SelectedMenu == i)
+    {
+      Oled_put_char('x');
+    }
+    else
+    {
+      Oled_put_char(' ');      
+    }
+    Oled_print((char *)pgm_read_word(&MenuList[ptrMenu->Menu_to_print][MENU_FIRST_OPTION_POS + i - 1]));
+    Oled_pos(i+3,2);
+  }
 }

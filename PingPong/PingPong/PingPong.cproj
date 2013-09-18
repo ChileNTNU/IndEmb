@@ -128,6 +128,9 @@
     <Compile Include="Header\InputOutput.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Header\menus.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Header\Oled.h">
       <SubType>compile</SubType>
     </Compile>
@@ -140,6 +143,9 @@
     <Compile Include="Header\UART.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Header\UserInterface.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Source\ADC.c">
       <SubType>compile</SubType>
     </Compile>
@@ -147,6 +153,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Source\Main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Source\menus.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Source\Oled.c">
@@ -159,6 +168,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Source\UART.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Source\UserInterface.c">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

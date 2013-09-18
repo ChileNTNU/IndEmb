@@ -5,14 +5,13 @@
  *  Author: Emilio García
  */ 
 
-
 #ifndef FONT_5X7_H_
 #define FONT_5X7_H_
 
 #include <avr/pgmspace.h>
 
 //The index of this table corresponds to the ascii table but substracting 32.
-const unsigned char PROGMEM myfont[95][5] = {
+const static char PROGMEM myfont[95][5] = {
   {0b00000000,0b00000000,0b00000000,0b00000000,0b00000000}, //0
   {0b00000000,0b00000000,0b01011110,0b00000000,0b00000000}, //1  !
   {0b00000000,0b00001110,0b00000000,0b00001110,0b00000000}, //2  "
@@ -109,8 +108,5 @@ const unsigned char PROGMEM myfont[95][5] = {
   {0b00000000,0b01000010,0b00111100,0b00001000,0b00000000}, // }
   {0b00000100,0b00000010,0b00000100,0b00000010,0b00000000}, // ~
 };
-
-
-
 
 #endif /* FONT_5X7_H_ */

@@ -82,6 +82,8 @@ void ReadJoystick(struct JoyStruct * pointer_Joystick)
     Res_Y = Joy_Y;
   }
   
+  pointer_Joystick->PrevDir = pointer_Joystick->Dir;
+  
   if(Res_X > THRS)
   {
     pointer_Joystick->Dir = Right;

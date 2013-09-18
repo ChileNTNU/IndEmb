@@ -21,7 +21,9 @@
 #include "../Header/Timer.h"
 #include "../Header/InputOutput.h"
 #include "../Header/Oled.h"
-//#include "../Header/font_5x7.h"
+#include "../Header/font_5x7.h"
+#include "../Header/menus.h"
+#include "../Header/UserInterface.h"
 #include <stdio.h>
 #include <avr/pgmspace.h>
 
@@ -33,8 +35,15 @@
 int main(void)
 {  
   struct JoyStruct Joystick_main;
-  struct SlideStruct Sliders;        
-    
+  struct SlideStruct Sliders;
+  struct MenuStruct Menu;
+  Menu.Menu_to_print = 0;
+  Menu.SelectedMenu = 1;  
+  
+  unsigned char MenuLenght = 0;
+  unsigned char MenuLenght2 = 0;
+  char * DummyLenght;
+  
   UART_Init();
   ExMem_Init();  
   Timer_Init();
@@ -50,7 +59,7 @@ int main(void)
   CalibrateJoystick(&Joystick_main) ;
   
   while(1)
-  {
+  {    
     if (bf10msFlag == C_ON)
     {
       bf10msFlag = C_OFF;
@@ -63,76 +72,49 @@ int main(void)
       bfHeartbeat = ~bfHeartbeat;      
       ReadJoystick(&Joystick_main);
       ReadSliders(&Sliders);                  
+      MenuLenght = MoveSelection(&Menu, &Joystick_main);
     }
     
     if(bf1sFlag == C_ON)
     {
       bf1sFlag = C_OFF;      
       
+      //In order to read all the pointer from flash. The step that have to be done are
+      //1. First read the pointer from the MenuList
+      DummyLenght = (char *) pgm_read_word(&MenuList[Menu.Menu_to_print]);
+      //2. Second read the pointer from the Menu which is active
+      DummyLenght = (char *) pgm_read_word(&DummyLenght[MENU_SIZE_POS]);
+      //3. Third you have to read the actual value from flash
+      MenuLenght2 = pgm_read_byte(DummyLenght);                
+            
+      //Oled_Refresh(&Menu);
+      UART_put_char(Menu.SelectedMenu,NULL);
+      UART_put_char(Menu.Menu_to_print,NULL);            
+      UART_put_char(0xFF,NULL);            
+      UART_put_char(MenuLenght,NULL);            
+      UART_put_char(MenuLenght2,NULL);            
+      
+      
       if (bfJoyButtFlag == C_ON)
       {
         bfJoyButtFlag = C_OFF;
         PrintJoystickPosition(&Joystick_main);
-        write_c(0xAE); // display off
+        write_c(0xAE); // Oled display off
       }
       
       if (bfLeftButtFlag == C_ON)
       {
         bfLeftButtFlag = C_OFF;
         PrintSlidersPosition(&Sliders);
-        Oled_clear_screen();
+        Oled_clear_screen(); //Oled display clean
       }
       
       if (bfRightButtFlag == C_ON)
       {
         bfRightButtFlag = C_OFF;        
         PrintSlidersPosition(&Sliders);
-        /*
-        //This is for horizontal addresing
-        write_c(0X20);       
-        write_c(0X00);
-        //This is for setting the active colums. In this case from Col_0 to Col_127                        
-        write_c(0x21);
-        write_c(0x00);
-        write_c(0x7F);
-        //This is for setting the page to print. In this case from Page_0 to Page-7
-        write_c(0x22);
-        write_c(0x00);
-        write_c(0x07);
-        
-        Oled_put_char('H');
-        Oled_put_char('o');
-        Oled_put_char('l');
-        Oled_put_char('a');
-        Oled_put_char('.');
-        Oled_put_char('.');
-        Oled_put_char('.');
-        */
-        Oled_home();        
-        Oled_put_char('H');
-        Oled_put_char('o');
-        Oled_put_char('l');
-        Oled_put_char('a');
-        Oled_put_char('.');
-        Oled_put_char('.');
-        Oled_put_char('.');
-        Oled_goto_line(1);
-        Oled_put_char('B');
-        Oled_put_char('O');
-        Oled_put_char('L');
-        Oled_put_char('A');
-        Oled_put_char('-');
-        Oled_put_char('-');
-        Oled_put_char('-');
-        Oled_pos(2,5);
-        Oled_put_char('V');
-        Oled_put_char('a');
-        Oled_put_char('t');
-        Oled_put_char('o');
-        Oled_put_char('!');
-        Oled_put_char('!');
-        Oled_put_char('!');
-        
+        //Oled_print((char *)pgm_read_word(&MainMenu[0]));
+        //Oled_print((char *)pgm_read_word(&MenuList[0][1]));
       }                  
     }
   }
