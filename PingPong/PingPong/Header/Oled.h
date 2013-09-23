@@ -44,6 +44,7 @@ void Oled_clear_line(unsigned char line_to_clear);
 void Oled_clear_screen(void);
 void Oled_pos(unsigned char page_num, unsigned char Col_num);
 void Oled_print(char * pChar_to_print);
+void Oled_print_P(const char * pChar_to_print);
 void Oled_Refresh(struct MenuStruct * ptrMenu);
 
 #endif /* OLED_H_ */

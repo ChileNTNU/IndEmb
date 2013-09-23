@@ -110,16 +110,7 @@
     <Compile Include="Header\ADC.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Header\font_4x6.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Header\font_5x7.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Header\font_5x7w.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Header\font_8x8.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Header\GlobalDef.h">
@@ -147,6 +138,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Source\ADC.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Source\font_5x7.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Source\InputOutput.c">

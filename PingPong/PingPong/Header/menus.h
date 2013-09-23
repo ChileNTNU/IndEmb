@@ -15,6 +15,7 @@
 #define MENU_TITLE_POS             (1)
 #define MENU_FIRST_OPTION_POS      (2)
 
-extern char* const * const MenuList[];
+extern const char * const * const MenuList[];
+extern const char * const AllMenuSelect[];
 
 #endif /* MENUS_H_ */

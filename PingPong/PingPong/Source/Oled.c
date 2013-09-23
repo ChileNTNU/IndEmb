@@ -46,7 +46,11 @@ void Oled_Init(void)
   write_c(0x00);
   write_c(0xa4); //out follows RAM content
   write_c(0xa6); //set normal display
-  write_c(0xaf); // display on
+  write_c(0xaf); // display on  
+  //This is for Page addressing mode
+  write_c(0X20);
+  write_c(0X02);
+  
 }
 
 void Oled_put_char (char char_to_print)
@@ -159,16 +163,56 @@ void Oled_print( char * pChar_to_print)
   }    
 }
 
+void Oled_print_P( const char * pChar_to_print)
+{
+  unsigned char i = 0;
+  unsigned char Value_to_print;
+  Value_to_print = pgm_read_byte(pChar_to_print);
+  
+  //while ((pgm_read_byte(&pChar_to_print[i]) != '\0')&&(i < 21))
+  while ((Value_to_print != '\0')&&(i < 21))
+  {
+    //Oled_put_char(pgm_read_byte(&pChar_to_print[i]));
+    Oled_put_char(Value_to_print);    
+    i++;
+    Value_to_print = pgm_read_byte(&pChar_to_print[i]);
+  }
+}
+
 void Oled_Refresh(struct MenuStruct * ptrMenu)
 {
-  unsigned char Menu_Lenght,i;
-  Menu_Lenght = pgm_read_byte(&MenuList[ptrMenu->Menu_to_print][MENU_SIZE_POS]);
+  unsigned char MenuLenght,i;
+  int * MenuAddress;
+  char * ItemFromMenu;
+  
+  //---Read the length of the menu---
+  //In order to read all the pointers from flash. The steps that have to be done are
+  //1. First read the pointer from the MenuList table. This table has pointer to all the possible menus
+  //   We read 16 bits because all pointer in AVR are 16 bit long
+  MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
+  //2. Second read the pointer from the Menu which is active. From here we obtain the address for the
+  //   corresponding field we want to use
+  ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_SIZE_POS]);
+  //3. Third you have to read the actual value from flash. This gets you the value
+  MenuLenght = pgm_read_byte(ItemFromMenu);
+  //4. Fourth the value has to converted from ascii to normal number by subtracting '0'
+  MenuLenght = MenuLenght - '0';      
+   
+  //---Clear the Oled screen and go to the first position for printing the Title---
   Oled_clear_screen();
   Oled_pos(1,5);
-  Oled_print((char *)pgm_read_word(&MenuList[ptrMenu->Menu_to_print][MENU_TITLE_POS]));  
+  
+  //---Read the pointer of the title string and print it on the Oled---
+  MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
+  ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_TITLE_POS]);
+  Oled_print_P((const char *)ItemFromMenu);      
+  
+  //---Go to the start position of the Menu option---
   Oled_pos(3,2);
-  for (i = 1; i <= Menu_Lenght; i++)
+  //---Print as many option the menu has
+  for (i = 1; i <= MenuLenght; i++)
   {
+    //---Check if the menu which is going to be printed is the selected one---
     if (ptrMenu->SelectedMenu == i)
     {
       Oled_put_char('x');
@@ -177,7 +221,16 @@ void Oled_Refresh(struct MenuStruct * ptrMenu)
     {
       Oled_put_char(' ');      
     }
-    Oled_print((char *)pgm_read_word(&MenuList[ptrMenu->Menu_to_print][MENU_FIRST_OPTION_POS + i - 1]));
+    //---Print the corresponding menu option---
+    MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
+    // The +i-1 is because the index of the option menu is not corresponding to the index of this for loop
+    ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_FIRST_OPTION_POS + i - 1]);
+    Oled_print_P((const char *)ItemFromMenu);
+     
+    //Oled_print((char *)pgm_read_word(&MenuList[ptrMenu->Menu_to_print][MENU_FIRST_OPTION_POS + i - 1]));
+    
+    //---Go to the next position of the next menu option
     Oled_pos(i+3,2);
   }
+  
 }

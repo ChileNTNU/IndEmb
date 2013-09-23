@@ -22,7 +22,7 @@
 #include "../Header/InputOutput.h"
 #include "../Header/Oled.h"
 #include "../Header/font_5x7.h"
-#include "../Header/menus.h"
+#include "../Header/Menus.h"
 #include "../Header/UserInterface.h"
 #include <stdio.h>
 #include <avr/pgmspace.h>
@@ -38,17 +38,14 @@ int main(void)
   struct SlideStruct Sliders;
   struct MenuStruct Menu;
   Menu.Menu_to_print = 0;
-  Menu.SelectedMenu = 1;  
-  
-  unsigned char MenuLenght = 0;
-  unsigned char MenuLenght2 = 0;
-  char * DummyLenght;
-  
+  Menu.SelectedMenu = 1;        
+    
   UART_Init();
   ExMem_Init();  
   Timer_Init();
   IO_Init();
   Oled_Init();
+  Oled_home();
   fdevopen(UART_put_char, NULL);  
     
   EnableInterrupts();
@@ -72,34 +69,20 @@ int main(void)
       bfHeartbeat = ~bfHeartbeat;      
       ReadJoystick(&Joystick_main);
       ReadSliders(&Sliders);                  
-      MenuLenght = MoveSelection(&Menu, &Joystick_main);
+      MoveSelection(&Menu, &Joystick_main);
     }
     
     if(bf1sFlag == C_ON)
     {
       bf1sFlag = C_OFF;      
       
-      //In order to read all the pointer from flash. The step that have to be done are
-      //1. First read the pointer from the MenuList
-      DummyLenght = (char *) pgm_read_word(&MenuList[Menu.Menu_to_print]);
-      //2. Second read the pointer from the Menu which is active
-      DummyLenght = (char *) pgm_read_word(&DummyLenght[MENU_SIZE_POS]);
-      //3. Third you have to read the actual value from flash
-      MenuLenght2 = pgm_read_byte(DummyLenght);                
-            
-      //Oled_Refresh(&Menu);
-      UART_put_char(Menu.SelectedMenu,NULL);
-      UART_put_char(Menu.Menu_to_print,NULL);            
-      UART_put_char(0xFF,NULL);            
-      UART_put_char(MenuLenght,NULL);            
-      UART_put_char(MenuLenght2,NULL);            
-      
-      
+      Oled_Refresh(&Menu);
+                  
       if (bfJoyButtFlag == C_ON)
       {
         bfJoyButtFlag = C_OFF;
         PrintJoystickPosition(&Joystick_main);
-        write_c(0xAE); // Oled display off
+        ChangeMenu (&Menu);
       }
       
       if (bfLeftButtFlag == C_ON)
@@ -112,9 +95,7 @@ int main(void)
       if (bfRightButtFlag == C_ON)
       {
         bfRightButtFlag = C_OFF;        
-        PrintSlidersPosition(&Sliders);
-        //Oled_print((char *)pgm_read_word(&MainMenu[0]));
-        //Oled_print((char *)pgm_read_word(&MenuList[0][1]));
+        PrintSlidersPosition(&Sliders);                
       }                  
     }
   }

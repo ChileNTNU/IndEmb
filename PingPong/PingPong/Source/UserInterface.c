@@ -10,20 +10,23 @@
 #include "../Header/UART.h"
 #include <avr/pgmspace.h>
 
-unsigned char MoveSelection (struct MenuStruct *ptrMenu, struct JoyStruct *ptrJoystick)
+void MoveSelection (struct MenuStruct *ptrMenu, struct JoyStruct *ptrJoystick)
 {
   unsigned char MenuLenght;
-  char * DummyLenght;
-  //In order to read all the pointer from flash. The step that have to be done are
-  //1. First read the pointer from the MenuList
-  DummyLenght = (char *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
-  //2. Second read the pointer from the Menu which is active
-  DummyLenght = (char *) pgm_read_word(&DummyLenght[MENU_SIZE_POS]);
-  //3. Third you have to read the actual value from flash
-  MenuLenght = pgm_read_byte(DummyLenght);
-  //4. Fourth the value has to converted from ascii to normal number by substracting '0' 
+  int * MenuAddress;
+  char * ItemFromMenu;
+  //In order to read all the pointers from flash. The steps that have to be done are
+  //1. First read the pointer from the MenuList table. This table has pointer to all the possible menus
+  //   We read 16 bits because all pointer in AVR are 16 bit long
+  MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
+  //2. Second read the pointer from the Menu which is active. From here we obtain the address for the 
+  //   corresponding field we want to use
+  ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_SIZE_POS]);
+  //3. Third you have to read the actual value from flash. This gets you the value
+  MenuLenght = pgm_read_byte(ItemFromMenu);
+  //4. Fourth the value has to converted from ascii to normal number by subtracting '0' 
   MenuLenght = MenuLenght - '0';
-  
+    
   if ((ptrJoystick->PrevDir == Neutral) && (ptrJoystick->Dir == Down))
   {
     ptrMenu->SelectedMenu++;
@@ -32,7 +35,33 @@ unsigned char MoveSelection (struct MenuStruct *ptrMenu, struct JoyStruct *ptrJo
       ptrMenu->SelectedMenu = 1;    //Go to the first menu option
     }
   } 
-
-  return MenuLenght;
+  if ((ptrJoystick->PrevDir == Neutral) && (ptrJoystick->Dir == Up))
+  {    
+    if (ptrMenu->SelectedMenu == 1)
+    {
+      ptrMenu->SelectedMenu = MenuLenght;    //Go to the first menu option
+    }
+    else
+    {
+      ptrMenu->SelectedMenu--;
+    }
+  }
 } 
+
+void ChangeMenu (struct MenuStruct *ptrMenu)
+{  
+  char * MenuAddress;
+  char SelectedMenu;
+  //In order to read all the pointers from flash. The steps that have to be done are
+  //1. First read the pointer from the MenuList table. This table has pointer to all the possible menus
+  //   We read 16 bits because all pointer in AVR are 16 bit long
+  MenuAddress = (char *) pgm_read_word(&AllMenuSelect[ptrMenu->Menu_to_print]);
+  //2. Second read the pointer from the Menu which is active. From here we obtain the address for the
+  //   corresponding field we want to use
+  SelectedMenu = pgm_read_byte(&MenuAddress[ptrMenu->SelectedMenu-1]);
+  //3. Third you have to read the actual value from flash. This gets you the value
+  ptrMenu->Menu_to_print = SelectedMenu;
+  ptrMenu->SelectedMenu = 1;
+  
+}
 

@@ -32,8 +32,7 @@
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
-unsigned char MoveSelection (struct MenuStruct *ptrMenu, struct JoyStruct *ptrJoystick);
-
-
+void MoveSelection (struct MenuStruct *ptrMenu, struct JoyStruct *ptrJoystick);
+void ChangeMenu (struct MenuStruct *ptrMenu);
 
 #endif /* USERINTERFACE_H_ */
