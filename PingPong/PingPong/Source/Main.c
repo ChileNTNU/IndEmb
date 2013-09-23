@@ -34,6 +34,8 @@
 *******************************************************************************/
 int main(void)
 {  
+  unsigned char a;
+  
   struct JoyStruct Joystick_main;
   struct SlideStruct Sliders;
   struct MenuStruct Menu;
@@ -52,6 +54,7 @@ int main(void)
   
   printf("--- Hola ---\r\n");
   SRAM_test();
+  SRAMclean();
   
   CalibrateJoystick(&Joystick_main) ;
   
@@ -90,6 +93,30 @@ int main(void)
         bfLeftButtFlag = C_OFF;
         PrintSlidersPosition(&Sliders);
         Oled_clear_screen(); //Oled display clean
+        /*
+        SRAMStoreByte(0x30,0x0000);
+        a = SRAMReadByte(0x0000);
+        Oled_put_char(a);
+        */
+        
+        /*
+        SRAMStoreFont('A',0x0000);
+        a = SRAMReadByte(0x0000);
+        write_d(a);
+        a = SRAMReadByte(0x0001);
+        write_d(a);
+        a = SRAMReadByte(0x0002);
+        write_d(a);
+        a = SRAMReadByte(0x0003);
+        write_d(a);
+        a = SRAMReadByte(0x0004);
+        write_d(a);
+        a = SRAMReadByte(0x0005);
+        write_d(a);
+        */
+        
+        SRAMStorePage("1234567890hola",PAGE0);
+        RefreshPageSRAM(PAGE0);
       }
       
       if (bfRightButtFlag == C_ON)

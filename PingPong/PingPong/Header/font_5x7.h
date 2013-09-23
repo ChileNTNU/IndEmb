@@ -8,6 +8,6 @@
 #ifndef FONT_5X7_H_
 #define FONT_5X7_H_
 
-extern const char myfont[95][5];
+extern const char myfont[96][5];
 
 #endif /* FONT_5X7_H_ */

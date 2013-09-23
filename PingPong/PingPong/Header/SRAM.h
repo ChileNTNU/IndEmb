@@ -16,8 +16,14 @@
 /******************************************************************************/
 /* Definitions                                                                */
 /******************************************************************************/
-
-
+#define PAGE0    (0x000)
+#define PAGE1    (0x100)
+#define PAGE2    (0x200)
+#define PAGE3    (0x300)
+#define PAGE4    (0x400)
+#define PAGE5    (0x500)
+#define PAGE6    (0x600)
+#define PAGE7    (0x700)
 
 /******************************************************************************/
 /* Function prototypes                                                        */
@@ -25,6 +31,10 @@
 
 void ExMem_Init(void);
 void SRAM_test(void);
-void LATCH_test(void);
+void SRAMStoreByte(unsigned char data, unsigned int address);
+unsigned char SRAMReadByte(unsigned int address);
+void SRAMStoreFont(char char_to_print, unsigned int start_address);
+void SRAMStorePage(char * String_to_save, unsigned int Page);
+void SRAMclean (void);
 
 #endif /* SRAM_H_ */

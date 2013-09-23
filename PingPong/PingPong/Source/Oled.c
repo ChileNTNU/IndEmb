@@ -8,18 +8,19 @@
 
 #include "../Header/font_5x7.h"
 #include "../Header/Oled.h"
+#include "../Header/SRAM.h"
 #include <avr/pgmspace.h>
 
 
 void write_c (unsigned char command)
 {
-  volatile char *oled_command = (char *) 0x1000; // Address for writting a command to the OLED
+  volatile char *oled_command = (char *) 0x1000; // Address for writing a command to the OLED
   oled_command[0] = command;    
 }
 
 void write_d (char data_to_write)
 {
-  volatile char *oled_data = (char *) 0x1200; // Address for writting a command to the OLED
+  volatile char *oled_data = (char *) 0x1200; // Address for writing data to the OLED
   oled_data[0] = data_to_write;
 }
 
@@ -62,9 +63,9 @@ void Oled_put_char (char char_to_print)
     char_to_print = 32;
   }
   
-  if (char_to_print > 126)
+  if (char_to_print > 127)
   {
-    char_to_print = 126;
+    char_to_print = 127;
   }
   
   char_to_print = char_to_print - 32;
@@ -215,7 +216,7 @@ void Oled_Refresh(struct MenuStruct * ptrMenu)
     //---Check if the menu which is going to be printed is the selected one---
     if (ptrMenu->SelectedMenu == i)
     {
-      Oled_put_char('x');
+      Oled_put_char(0xFF);
     }
     else
     {
@@ -233,4 +234,15 @@ void Oled_Refresh(struct MenuStruct * ptrMenu)
     Oled_pos(i+3,2);
   }
   
+}
+
+void RefreshPageSRAM(unsigned int PagetoPrint)
+{
+  unsigned char a, i = 0;
+  
+  for (i = 0; i < 0x7F; i++)
+  {
+    a = SRAMReadByte(PagetoPrint + i);
+    write_d(a);    
+  }  
 }

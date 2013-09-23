@@ -47,4 +47,5 @@ void Oled_print(char * pChar_to_print);
 void Oled_print_P(const char * pChar_to_print);
 void Oled_Refresh(struct MenuStruct * ptrMenu);
 
+void RefreshPageSRAM(unsigned int PagetoPrint);
 #endif /* OLED_H_ */
