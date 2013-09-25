@@ -17,6 +17,13 @@
 
 unsigned char ADC_array[4];
 
+
+/***************************************************************************//**
+ * @brief 	Reads the ADC value at specific channel using the external memory bus
+ * @param   channel   channel from which to read
+ * @return 	ADC_data  data which was read from the ADC
+ * @date	  09.09.2013 
+*******************************************************************************/
 unsigned char ADC_Read(unsigned char channel)
 {
   unsigned char ADC_data;
@@ -29,6 +36,12 @@ unsigned char ADC_Read(unsigned char channel)
   return ADC_data;
 } 
 
+/***************************************************************************//**
+ * @brief 	Calibrates the joystick by subtracting the offset value
+ * @param   pointer_Joystick   pointer to Joystick which is used
+ * @return 	None.
+ * @date	  09.09.2013 
+*******************************************************************************/
 void CalibrateJoystick(struct JoyStruct *pointer_Joystick)
 {
   unsigned int Joy_X;
@@ -39,6 +52,12 @@ void CalibrateJoystick(struct JoyStruct *pointer_Joystick)
   pointer_Joystick->Yoffset = Joy_Y - 128;    
 }
 
+/***************************************************************************//**
+ * @brief 	Reads the position of the Joystick and saves the values in the struct
+ * @param   pointer_Joystick   pointer to Joystick which is used
+ * @return 	None.
+ * @date	  09.09.2013 
+*******************************************************************************/
 void ReadJoystick(struct JoyStruct * pointer_Joystick)
 {
   unsigned int Joy_X;
@@ -109,7 +128,12 @@ void ReadJoystick(struct JoyStruct * pointer_Joystick)
   pointer_Joystick->Ypos = Res_Y;
 }
 
-
+/***************************************************************************//**
+ * @brief 	Prints the current position of the Joystick on the UART
+ * @param   pointer_Joystick   pointer to Joystick which is used
+ * @return 	None.
+ * @date	  09.09.2013 
+*******************************************************************************/
 void PrintJoystickPosition(struct JoyStruct * pointer_Joystick)
 {
   printf("\r\n---Joystick data---\r\n");
@@ -138,7 +162,12 @@ void PrintJoystickPosition(struct JoyStruct * pointer_Joystick)
   }    
 }
 
-
+/***************************************************************************//**
+ * @brief 	Reads the position of the Sliders on the Multifunction Card
+ * @param   pointer Sliders   pointer to Sliders which are used
+ * @return 	None.
+ * @date	  11.09.2013 
+*******************************************************************************/
 void ReadSliders(struct SlideStruct * pointer_Sliders)
 {
   unsigned int Slider_L;
@@ -156,6 +185,12 @@ void ReadSliders(struct SlideStruct * pointer_Sliders)
   pointer_Sliders->RightSlider = Slider_R;
 }
 
+/***************************************************************************//**
+ * @brief 	Prints current position of the sliders on the UART
+ * @param   pointer Sliders   pointer to sliders which are used
+ * @return 	None.
+ * @date	  11.09.2013 
+*******************************************************************************/
 void PrintSlidersPosition(struct SlideStruct * pointer_Sliders)
 {
   printf("\r\n---Sliders data---\r\n");

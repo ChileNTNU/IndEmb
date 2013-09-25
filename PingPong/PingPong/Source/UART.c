@@ -16,6 +16,12 @@
 
 uint8_t RxData;
 
+/***************************************************************************//**
+ * @brief 	Initializes the serial communication over the UART
+ * @param   None.
+ * @return 	None.
+ * @date	  28.08.2013 
+*******************************************************************************/
 void UART_Init(void)
 { 
   UCSR0A =   (0<<RXC0)|               //Receive complete flag clear
@@ -39,6 +45,14 @@ void UART_Init(void)
   bfReg_TxInterEnable =  C_DISABLE;         //Enables Transmission Interrupt
 }
 
+
+/***************************************************************************//**
+ * @brief 	Sends a character over the UART.
+ * @param   data_to_send  data sent over the UART
+ * @param   DummyFile     Dummy Pointer so that printf can be used
+ * @return 	None.
+ * @date	  28.08.2013 
+*******************************************************************************/
 int UART_put_char(char data_to_send, FILE* DummyFile)
 {
     while(!bfReg_TxBufferEmpty)
@@ -56,6 +70,12 @@ ISR(USART0_TX_vect)
 }
 */
 
+/***************************************************************************//**
+ * @brief 	ISR for receiving data over the UART.
+ * @param   None.
+ * @return 	None.
+ * @date	  28.08.2013 
+*******************************************************************************/
 ISR(USART0_RXC_vect)
 {
   bfReg_RxFlag = C_OFF;  

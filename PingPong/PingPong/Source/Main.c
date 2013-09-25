@@ -63,7 +63,7 @@ int main(void)
     if (bf10msFlag == C_ON)
     {
       bf10msFlag = C_OFF;
-      ReadButtons();
+      ReadButtons();      
     }
     
     if(bf100msFlag == C_ON)
@@ -73,13 +73,15 @@ int main(void)
       ReadJoystick(&Joystick_main);
       ReadSliders(&Sliders);                  
       MoveSelection(&Menu, &Joystick_main);
+      //Oled_Refresh(&Menu);
+      SRAM_Refresh_Menu(&Menu);
+      OledRefreshFromSRAM();
     }
     
     if(bf1sFlag == C_ON)
     {
-      bf1sFlag = C_OFF;      
-      
-      Oled_Refresh(&Menu);
+      bf1sFlag = C_OFF;            
+      //Oled_Refresh(&Menu);
                   
       if (bfJoyButtFlag == C_ON)
       {
@@ -92,37 +94,13 @@ int main(void)
       {
         bfLeftButtFlag = C_OFF;
         PrintSlidersPosition(&Sliders);
-        Oled_clear_screen(); //Oled display clean
-        /*
-        SRAMStoreByte(0x30,0x0000);
-        a = SRAMReadByte(0x0000);
-        Oled_put_char(a);
-        */
-        
-        /*
-        SRAMStoreFont('A',0x0000);
-        a = SRAMReadByte(0x0000);
-        write_d(a);
-        a = SRAMReadByte(0x0001);
-        write_d(a);
-        a = SRAMReadByte(0x0002);
-        write_d(a);
-        a = SRAMReadByte(0x0003);
-        write_d(a);
-        a = SRAMReadByte(0x0004);
-        write_d(a);
-        a = SRAMReadByte(0x0005);
-        write_d(a);
-        */
-        
-        SRAMStorePage("1234567890hola",PAGE0);
-        RefreshPageSRAM(PAGE0);
+        Oled_clear_screen(); //Oled display clean        
       }
       
       if (bfRightButtFlag == C_ON)
       {
         bfRightButtFlag = C_OFF;        
-        PrintSlidersPosition(&Sliders);                
+        PrintSlidersPosition(&Sliders);                        
       }                  
     }
   }

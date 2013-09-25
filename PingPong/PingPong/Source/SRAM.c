@@ -13,16 +13,29 @@
 #include "../Header/SRAM.h"
 #include "../Header/UART.h"
 #include "../Header/font_5x7.h"
+#include "../Header/Menus.h"
 #include <stdio.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
 
+/***************************************************************************//**
+ * @brief 	Initializes the external memory interface.
+ * @param   None.
+ * @return 	None.
+ * @date	  04.09.2013 
+*******************************************************************************/
 void ExMem_Init(void)
 {
   MCUCR |= (1 << SRE);  // Enable external memory
   SFIOR |= (1 << XMM2); // release Pins for JTAG
 }
 
+/***************************************************************************//**
+ * @brief 	Testfunction for the whole SRAM.
+ * @param   None.
+ * @return 	None.
+ * @date	  04.09.2013 
+*******************************************************************************/
 void SRAM_test(void)
 {
   volatile char *ext_ram = (char *) 0x1800; // Start address for the SRAM  
@@ -58,6 +71,13 @@ void SRAM_test(void)
   printf("SRAM test completed with %d errors in write phase and %d errors in read phase\r\n", werrors, rerrors);  
 }
 
+/***************************************************************************//**
+ * @brief 	Stores one byte at the given address in SRAM
+ * @param   data    data which is saved in the SRAM
+ * @param   address address where the data is saved
+ * @return 	None.
+ * @date	  04.09.2013 
+*******************************************************************************/
 void SRAMStoreByte(unsigned char data, unsigned int address)
 {
   volatile char *ext_ram = (char *) 0x1800;
@@ -65,6 +85,12 @@ void SRAMStoreByte(unsigned char data, unsigned int address)
   *ext_ram = data;
 }
 
+/***************************************************************************//**
+ * @brief 	Reads one byte from the SRAM.
+ * @param   address address the data is read from
+ * @return 	None.
+ * @date	  04.09.2013 
+*******************************************************************************/
 unsigned char SRAMReadByte(unsigned int address)
 {
   volatile char *ext_ram = (char *) 0x1800;
@@ -72,6 +98,13 @@ unsigned char SRAMReadByte(unsigned int address)
   return *ext_ram;
 }
 
+/***************************************************************************//**
+ * @brief 	Stores the corresponding font for the OLED in the SRAM
+ * @param   char_to_print   char which should be saved in SRAM
+ * @param   start_address   address the data is written to
+ * @return 	None.
+ * @date	  21.09.2013 
+*******************************************************************************/
 void SRAMStoreFont(char char_to_print, unsigned int start_address)
 {
    unsigned char a;
@@ -96,6 +129,13 @@ void SRAMStoreFont(char char_to_print, unsigned int start_address)
    SRAMStoreByte(0x00,start_address);   
 }
 
+/***************************************************************************//**
+ * @brief 	Stores a string in a page (127 x 8 byte) in the SRAM
+ * @param   String_to_save  string which is saved in the SRAM  
+ * @param   Page            page where the data is written to
+ * @return 	None.
+ * @date	  23.09.2013 
+*******************************************************************************/
 void SRAMStorePage(char * String_to_save, unsigned int Page)
 {
   unsigned char i = 0;
@@ -104,17 +144,109 @@ void SRAMStorePage(char * String_to_save, unsigned int Page)
   {
     SRAMStoreFont(String_to_save[i],Page + (i*6));
     i++;
-  }      
+  }
+  SRAMStoreByte(0x00,Page + (i*6));         
 }
 
+/***************************************************************************//**
+ * @brief 	Stores string from program memory in SRAM
+ * @param   pChar_to_print    pointer to first character of the string
+ * @param   Address           address the data is read from
+ * @return 	None.
+ * @date	  23.09.2013 
+*******************************************************************************/
+void SRAMStoreString_P(const char * pChar_to_print, unsigned int Address)
+{
+  unsigned char i = 0;
+  unsigned char Value_to_print;
+  Value_to_print = pgm_read_byte(pChar_to_print);
+  
+  while ((Value_to_print != '\0')&&(i < 21))
+  {    
+    SRAMStoreFont(Value_to_print,Address + (i * 6));
+    i++;
+    Value_to_print = pgm_read_byte(&pChar_to_print[i]);
+  }   
+}
+
+/***************************************************************************//**
+ * @brief 	Fills the whole SRAM with blanks.
+ * @param   None.
+ * @return 	None.
+ * @date	  23.09.2013 
+*******************************************************************************/
 void SRAMclean (void)
 {
-  SRAMStorePage("                      ",PAGE0);
-  SRAMStorePage("                      ",PAGE1);
-  SRAMStorePage("                      ",PAGE2);
-  SRAMStorePage("                      ",PAGE3);
-  SRAMStorePage("                      ",PAGE4);
-  SRAMStorePage("                      ",PAGE5);
-  SRAMStorePage("                      ",PAGE6);
-  SRAMStorePage("                      ",PAGE7);
+  int SRAMaddress =  PAGE0;  
+  
+  for (SRAMaddress = 0; SRAMaddress < 0x800; SRAMaddress++)
+  {
+    SRAMStoreByte(0x00,SRAMaddress);
+  }
+}
+
+/***************************************************************************//**
+ * @brief 	Saves the current menu in the SRAM
+ * @param   ptrMenu    pointer to the menu which is used
+ * @return 	None.
+ * @date	  23.09.2013 
+*******************************************************************************/
+void SRAM_Refresh_Menu(struct MenuStruct * ptrMenu)
+{
+  int SRAMaddress;
+  unsigned char MenuLenght,i;
+  int * MenuAddress;
+  char * ItemFromMenu;
+  
+  //---Read the length of the menu---
+  //In order to read all the pointers from flash. The steps that have to be done are
+  //1. First read the pointer from the MenuList table. This table has pointer to all the possible menus
+  //   We read 16 bits because all pointer in AVR are 16 bit long
+  MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
+  //2. Second read the pointer from the Menu which is active. From here we obtain the address for the
+  //   corresponding field we want to use
+  ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_SIZE_POS]);
+  //3. Third you have to read the actual value from flash. This gets you the value
+  MenuLenght = pgm_read_byte(ItemFromMenu);
+  //4. Fourth the value has to converted from ascii to normal number by subtracting '0'
+  MenuLenght = MenuLenght - '0';
+  
+  //---Clear the Oled screen and go to the first position for printing the Title---
+  SRAMclean();
+  //Oled_pos(1,5);
+  SRAMaddress = PAGE1 + 30; //Fifth character, each character has 6 columns
+  
+  //---Read the pointer of the title string and print it on the Oled---  
+  MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
+  ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_TITLE_POS]);
+    
+  SRAMStoreString_P((const char *)ItemFromMenu,SRAMaddress);
+  
+  //---Go to the start position of the Menu option---
+  //Oled_pos(3,2);
+  SRAMaddress = PAGE3 + 12; //Second character, each character has 6 columns
+  
+  for (i = 1; i <= MenuLenght; i++)
+  {
+    //---Check if the menu which is going to be printed is the selected one---
+    if (ptrMenu->SelectedMenu == i)
+    {
+      SRAMStoreFont(0xFF,SRAMaddress); //Very last font. In this case the smiley face :)
+    }
+    else
+    {
+      SRAMStoreFont(' ',SRAMaddress);
+    }
+    //---Print the corresponding menu option---
+    MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
+    // The +i-1 is because the index of the option menu is not corresponding to the index of this for loop
+    ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_FIRST_OPTION_POS + i - 1]);
+        
+    SRAMaddress = SRAMaddress + 6; //Go to next character
+    SRAMStoreString_P((const char *)ItemFromMenu,SRAMaddress);   
+    
+    //---Go to the next position of the next menu option
+    //Oled_pos(i+3,2);
+    SRAMaddress = (PAGE_SIZE * i) + PAGE3 + 12;
+  }  
 }

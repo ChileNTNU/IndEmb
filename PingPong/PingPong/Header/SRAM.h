@@ -25,6 +25,7 @@
 #define PAGE6    (0x600)
 #define PAGE7    (0x700)
 
+#define PAGE_SIZE (0x100)
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
@@ -35,6 +36,8 @@ void SRAMStoreByte(unsigned char data, unsigned int address);
 unsigned char SRAMReadByte(unsigned int address);
 void SRAMStoreFont(char char_to_print, unsigned int start_address);
 void SRAMStorePage(char * String_to_save, unsigned int Page);
+void SRAMStoreString_P(const char * pChar_to_print, unsigned int Page);
 void SRAMclean (void);
+void SRAM_Refresh_Menu(struct MenuStruct * ptrMenu);
 
 #endif /* SRAM_H_ */

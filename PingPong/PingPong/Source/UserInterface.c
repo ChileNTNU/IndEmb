@@ -10,6 +10,13 @@
 #include "../Header/UART.h"
 #include <avr/pgmspace.h>
 
+/***************************************************************************//**
+ * @brief 	Recognizes the Joystick movement and changes the selected menu.
+ * @param   ptrMenu     pointer to menu which is used
+ * @param   ptrJoystick pointer to Joystick which is used
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
 void MoveSelection (struct MenuStruct *ptrMenu, struct JoyStruct *ptrJoystick)
 {
   unsigned char MenuLenght;
@@ -48,6 +55,12 @@ void MoveSelection (struct MenuStruct *ptrMenu, struct JoyStruct *ptrJoystick)
   }
 } 
 
+/***************************************************************************//**
+ * @brief 	Changes between the menus depending on the selected menu.
+ * @param   ptrMenu     pointer to menu which is used
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
 void ChangeMenu (struct MenuStruct *ptrMenu)
 {  
   char * MenuAddress;

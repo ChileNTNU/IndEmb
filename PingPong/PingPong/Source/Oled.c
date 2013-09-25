@@ -11,19 +11,36 @@
 #include "../Header/SRAM.h"
 #include <avr/pgmspace.h>
 
-
+/***************************************************************************//**
+ * @brief 	Sends a command to the OLED via the external memory interface
+ * @param   command   command for the OLED
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
 void write_c (unsigned char command)
 {
   volatile char *oled_command = (char *) 0x1000; // Address for writing a command to the OLED
   oled_command[0] = command;    
 }
 
+/***************************************************************************//**
+ * @brief 	Sends data to the OLED via the external memory interface
+ * @param   data   data for the OLED
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
 void write_d (char data_to_write)
 {
   volatile char *oled_data = (char *) 0x1200; // Address for writing data to the OLED
   oled_data[0] = data_to_write;
 }
 
+/***************************************************************************//**
+ * @brief 	Initializes the OLED
+ * @param   None.
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
 void Oled_Init(void)
 {
   write_c(0xae); // display off
@@ -54,6 +71,12 @@ void Oled_Init(void)
   
 }
 
+/***************************************************************************//**
+ * @brief 	Prints a character on the OLED
+ * @param   char_to_print   character which is printed
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
 void Oled_put_char (char char_to_print)
 {
   unsigned char a;
@@ -77,6 +100,12 @@ void Oled_put_char (char char_to_print)
   write_d(0x00);
 }
 
+/***************************************************************************//**
+ * @brief 	Goes to the first line and the first column
+ * @param   None.
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
 void Oled_home(void)
 {
   //This is for Page addressing mode
@@ -90,6 +119,12 @@ void Oled_home(void)
   write_c(0xb0);     
 }
 
+/***************************************************************************//**
+ * @brief 	Goes to a specified line.
+ * @param   line  line to go to
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
 void Oled_goto_line(unsigned char line)
 {  
   //This is for Page addressing mode
@@ -111,6 +146,12 @@ void Oled_goto_line(unsigned char line)
   }      
 }
 
+/***************************************************************************//**
+ * @brief 	Clears the specified line.
+ * @param   line_to_clear  line which is cleared
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
 void Oled_clear_line(unsigned char line_to_clear)
 {
   Oled_goto_line(line_to_clear);
@@ -121,6 +162,12 @@ void Oled_clear_line(unsigned char line_to_clear)
   }    
 }
 
+/***************************************************************************//**
+ * @brief 	Clears the whole OLED.
+ * @param   None.
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
 void Oled_clear_screen(void)
 {    
   Oled_clear_line(0);
@@ -133,6 +180,13 @@ void Oled_clear_screen(void)
   Oled_clear_line(7);
 }
 
+/***************************************************************************//**
+ * @brief 	Goes to a specified line and column.
+ * @param   page_num  line/page to go to
+ * @param   Col_num   column to go to
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
 void Oled_pos(unsigned char page_num, unsigned char Col_num)
 {
   unsigned char temp_Col;
@@ -154,6 +208,12 @@ void Oled_pos(unsigned char page_num, unsigned char Col_num)
   write_c(temp_Col);
 }
 
+/***************************************************************************//**
+ * @brief 	Prints a string on the OLED
+ * @param   char_to_print   pointer to the first character to print
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
 void Oled_print( char * pChar_to_print)
 {
   unsigned char i = 0;
@@ -164,6 +224,12 @@ void Oled_print( char * pChar_to_print)
   }    
 }
 
+/***************************************************************************//**
+ * @brief 	Prints a string from program memory on the OLED
+ * @param   pChar_to_print  pointer to the first character to print
+ * @return 	None.
+ * @date	  18.09.2013 
+*******************************************************************************/
 void Oled_print_P( const char * pChar_to_print)
 {
   unsigned char i = 0;
@@ -180,6 +246,12 @@ void Oled_print_P( const char * pChar_to_print)
   }
 }
 
+/***************************************************************************//**
+ * @brief 	Updates the OLED with the current menu
+ * @param   ptrMenu   pointer to Menu which is displayed
+ * @return 	None.
+ * @date	  18.09.2013 
+*******************************************************************************/
 void Oled_Refresh(struct MenuStruct * ptrMenu)
 {
   unsigned char MenuLenght,i;
@@ -232,17 +304,39 @@ void Oled_Refresh(struct MenuStruct * ptrMenu)
     
     //---Go to the next position of the next menu option
     Oled_pos(i+3,2);
-  }
-  
+  }  
 }
 
+/***************************************************************************//**
+ * @brief 	Refresh one page of the OLED with data from the SRAM
+ * @param   PagetoPrint   Page which should be updated
+ * @return 	None.
+ * @date	  23.09.2013 
+*******************************************************************************/
 void RefreshPageSRAM(unsigned int PagetoPrint)
 {
   unsigned char a, i = 0;
   
-  for (i = 0; i < 0x7F; i++)
+  for (i = 0; i < 0x80; i++)
   {
     a = SRAMReadByte(PagetoPrint + i);
     write_d(a);    
   }  
+}
+
+/***************************************************************************//**
+ * @brief 	Updates the whole OLED with data from the SRAM
+ * @param   None.
+ * @return 	None.
+ * @date	  25.09.2013 
+*******************************************************************************/
+void OledRefreshFromSRAM(void)
+{
+  unsigned int PageNum;  
+  
+  for (PageNum = 0; PageNum < 8; PageNum++)
+  {
+    Oled_goto_line(PageNum);    
+    RefreshPageSRAM(0x100 * PageNum);    
+  }
 }

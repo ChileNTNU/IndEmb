@@ -16,6 +16,12 @@
 
 volatile union Ubyte_def TimerFlags;
 
+/***************************************************************************//**
+ * @brief 	Initializes a 10 ms Timer.
+ * @param   None.
+ * @return 	None.
+ * @date	  09.09.2013 
+*******************************************************************************/
 void Timer_Init(void)
 {  
   TCCR0 = (1 << WGM01)|(1<<CS02)|(1<<CS00);			//Clear Timer on Compare match (CTC) mode & Clock and 1024 preescaler
@@ -25,6 +31,12 @@ void Timer_Init(void)
     
 }
 
+/***************************************************************************//**
+ * @brief 	ISR of the timer. Used to generate 10ms, 100ms and 1s flags
+ * @param   None.
+ * @return 	None.
+ * @date	  09.09.2013 
+*******************************************************************************/
 ISR(TIMER0_COMP_vect)
 {
   static unsigned char Prueba = 0;

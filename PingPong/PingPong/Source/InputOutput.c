@@ -16,6 +16,12 @@
 
 union Ubyte_def ButtonsFlags;    
 
+/***************************************************************************//**
+ * @brief   Initializes all in- and outputs
+ * @param   None.
+ * @return 	None.
+ * @date	  11.09.2013 
+*******************************************************************************/
 void IO_Init(void)
 {
   //For the heartbeat
@@ -32,6 +38,12 @@ void IO_Init(void)
   
 }
 
+/***************************************************************************//**
+ * @brief 	Reads the values of the touch buttons on the Multifunction Card
+ * @param   None.
+ * @return 	None.
+ * @date	  11.09.2013 
+*******************************************************************************/
 void ReadButtons (void)
 {  
   if ((bfPrevJoyButt == C_ON) &&(bfJoyButton == C_OFF))           
