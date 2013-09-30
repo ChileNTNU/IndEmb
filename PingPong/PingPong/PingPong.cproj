@@ -119,10 +119,16 @@
     <Compile Include="Header\InputOutput.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Header\menus.h">
+    <Compile Include="Header\MCP2515.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Header\Menus.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Header\Oled.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Header\SPI.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Header\SRAM.h">
@@ -149,10 +155,16 @@
     <Compile Include="Source\Main.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Source\menus.c">
+    <Compile Include="Source\MCP2515.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Source\Menus.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Source\Oled.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Source\SPI.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Source\SRAM.c">

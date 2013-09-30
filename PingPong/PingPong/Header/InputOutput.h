@@ -32,18 +32,18 @@ extern union Ubyte_def ButtonsFlags;
 /******************************************************************************/
 /* Macros for the registers                                                   */
 /******************************************************************************/
-#define bfJoyButtonDir   REGISTER_BIT(DDRB,1)
-#define bfJoyButton      REGISTER_BIT(PINB,1)
-#define bfJoyButtonPull  REGISTER_BIT(PORTB,1)
+#define pinJoyButtonDir   REGISTER_BIT(DDRB,1)
+#define pinJoyButton      REGISTER_BIT(PINB,1)
+#define pinJoyButtonPull  REGISTER_BIT(PORTB,1)
 
-#define bfLeftButtonDir  REGISTER_BIT(DDRB,2)
-#define bfLeftButton     REGISTER_BIT(PINB,2)
+#define pinLeftButtonDir  REGISTER_BIT(DDRB,2)
+#define pinLeftButton     REGISTER_BIT(PINB,2)
 
-#define bfRightButtonDir REGISTER_BIT(DDRB,3)
-#define bfRightButton    REGISTER_BIT(PINB,3)
+#define pinRightButtonDir REGISTER_BIT(DDRB,3)
+#define pinRightButton    REGISTER_BIT(PINB,3)
 
-#define bfHeartbeatDir   REGISTER_BIT(DDRE,2)
-#define bfHeartbeat      REGISTER_BIT(PORTE,2)
+#define pinHeartbeatDir   REGISTER_BIT(DDRE,2)
+#define pinHeartbeat      REGISTER_BIT(PORTE,2)
 
 
 /******************************************************************************/

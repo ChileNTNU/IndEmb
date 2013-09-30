@@ -49,6 +49,5 @@ extern uint8_t RxData;
 /******************************************************************************/
 void UART_Init(void);
 int UART_put_char(char data_to_send, FILE* DummyFile);
-void UART_put_string(char* s);
 
 #endif /* UART_H_ */

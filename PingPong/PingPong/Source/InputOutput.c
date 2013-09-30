@@ -27,14 +27,14 @@ void IO_Init(void)
   //For the heartbeat
   //DDRE = 0x04;
   //PORTE = 0x04;
-  bfHeartbeatDir = C_OUT;
-  bfHeartbeat    = C_LED_OFF;
+  pinHeartbeatDir = C_OUT;
+  pinHeartbeat    = C_LED_OFF;
   
   //For reading the buttons
-  bfJoyButtonDir = C_IN;
-  bfJoyButtonPull = C_ON;
-  bfLeftButtonDir = C_IN;  
-  bfRightButtonDir = C_IN;
+  pinJoyButtonDir = C_IN;
+  pinJoyButtonPull = C_ON;
+  pinLeftButtonDir = C_IN;  
+  pinRightButtonDir = C_IN;
   
 }
 
@@ -46,25 +46,21 @@ void IO_Init(void)
 *******************************************************************************/
 void ReadButtons (void)
 {  
-  if ((bfPrevJoyButt == C_ON) &&(bfJoyButton == C_OFF))           
+  if ((bfPrevJoyButt == C_ON) &&(pinJoyButton == C_OFF))           
   {
     bfJoyButtFlag = C_ON;
   }
-  bfPrevJoyButt = bfJoyButton;
+  bfPrevJoyButt = pinJoyButton;
   
-  if ((bfPrevLeftButt == C_OFF) &&(bfLeftButton == C_ON))
+  if ((bfPrevLeftButt == C_OFF) &&(pinLeftButton == C_ON))
   {
     bfLeftButtFlag = C_ON;
   }
-  bfPrevLeftButt = bfLeftButton;
+  bfPrevLeftButt = pinLeftButton;
   
-  if ((bfPrevRightButt == C_OFF) &&(bfRightButton == C_ON))
+  if ((bfPrevRightButt == C_OFF) &&(pinRightButton == C_ON))
   {
     bfRightButtFlag = C_ON;
   }
-  bfPrevRightButt = bfRightButton;
-    
-  //bfJoyButtFlag = bfJoyButton;
-  //bfLeftButtFlag = bfLeftButton;
-  //bfRightButtFlag = bfRightButton;
+  bfPrevRightButt = pinRightButton;   
 }

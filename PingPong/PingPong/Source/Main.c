@@ -24,6 +24,8 @@
 #include "../Header/font_5x7.h"
 #include "../Header/Menus.h"
 #include "../Header/UserInterface.h"
+#include "../Header/SPI.h"
+#include "../Header/MCP2515.h"
 #include <stdio.h>
 #include <avr/pgmspace.h>
 
@@ -48,6 +50,7 @@ int main(void)
   IO_Init();
   Oled_Init();
   Oled_home();
+  SPI_Init();  
   fdevopen(UART_put_char, NULL);  
     
   EnableInterrupts();
@@ -55,6 +58,7 @@ int main(void)
   printf("--- Hola ---\r\n");
   SRAM_test();
   SRAMclean();
+  MCP2515_Init();
   
   CalibrateJoystick(&Joystick_main) ;
   
@@ -69,7 +73,7 @@ int main(void)
     if(bf100msFlag == C_ON)
     {
       bf100msFlag = C_OFF;
-      bfHeartbeat = ~bfHeartbeat;      
+      pinHeartbeat = ~pinHeartbeat;      
       ReadJoystick(&Joystick_main);
       ReadSliders(&Sliders);                  
       MoveSelection(&Menu, &Joystick_main);
@@ -80,8 +84,7 @@ int main(void)
     
     if(bf1sFlag == C_ON)
     {
-      bf1sFlag = C_OFF;            
-      //Oled_Refresh(&Menu);
+      bf1sFlag = C_OFF;                  
                   
       if (bfJoyButtFlag == C_ON)
       {
@@ -100,7 +103,12 @@ int main(void)
       if (bfRightButtFlag == C_ON)
       {
         bfRightButtFlag = C_OFF;        
-        PrintSlidersPosition(&Sliders);                        
+        //PrintSlidersPosition(&Sliders);
+        a = MCP2515_Read(MCP_CANCTRL);
+        UART_put_char(a, NULL);
+        MCP2515_Bit_Modify(MCP_CANCTRL,0xE0,0x00);
+        a = MCP2515_Read(MCP_CANCTRL);
+        UART_put_char(a, NULL);
       }                  
     }
   }
