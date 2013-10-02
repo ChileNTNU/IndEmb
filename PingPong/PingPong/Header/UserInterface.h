@@ -25,11 +25,10 @@
 /* Macros for the registers                                                   */
 /******************************************************************************/
 
-
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
-void MoveSelection (struct MenuStruct *ptrMenu, struct JoyStruct *ptrJoystick);
-void ChangeMenu (struct MenuStruct *ptrMenu);
+void Move_Selection(struct MenuStruct *ptrMenu, struct JoyStruct *ptrJoystick);
+void Change_Menu(struct MenuStruct *ptrMenu);
 
 #endif /* USERINTERFACE_H_ */

@@ -6,6 +6,9 @@
  *   @author Tobias Franzen and Emilio Garcia
 *******************************************************************************/  
 
+/******************************************************************************/
+/* Include Files                                                              */
+/******************************************************************************/
 #include "../Header/font_5x7.h"
 #include "../Header/Oled.h"
 #include "../Header/SRAM.h"
@@ -17,7 +20,7 @@
  * @return 	None.
  * @date	  16.09.2013 
 *******************************************************************************/
-void write_c (unsigned char command)
+void Write_Command (unsigned char command)
 {
   volatile char *oled_command = (char *) 0x1000; // Address for writing a command to the OLED
   oled_command[0] = command;    
@@ -29,7 +32,7 @@ void write_c (unsigned char command)
  * @return 	None.
  * @date	  16.09.2013 
 *******************************************************************************/
-void write_d (char data_to_write)
+void Write_Data (char data_to_write)
 {
   volatile char *oled_data = (char *) 0x1200; // Address for writing data to the OLED
   oled_data[0] = data_to_write;
@@ -43,32 +46,31 @@ void write_d (char data_to_write)
 *******************************************************************************/
 void Oled_Init(void)
 {
-  write_c(0xae); // display off
-  write_c(0xa1); //segment remap
-  write_c(0xda); //common pads hardware: alternative
-  write_c(0x12);
-  write_c(0xc8); //common output scan direction:com63~com0
-  write_c(0xa8); //multiplex ration mode:63
-  write_c(0x3f);
-  write_c(0xd5); //display divide ratio/osc. freq. mode
-  write_c(0x80);
-  write_c(0x81); //contrast control
-  write_c(0x50);
-  write_c(0xd9); //set pre-charge period
-  write_c(0x21);
-  write_c(0x20); //Set Memory Addressing Mode
-  write_c(0x02);
-  write_c(0xdb); //VCOM deselect level mode
-  write_c(0x30);
-  write_c(0xad); //master configuration
-  write_c(0x00);
-  write_c(0xa4); //out follows RAM content
-  write_c(0xa6); //set normal display
-  write_c(0xaf); // display on  
+  Write_Command(0xae); // display off
+  Write_Command(0xa1); //segment remap
+  Write_Command(0xda); //common pads hardware: alternative
+  Write_Command(0x12);
+  Write_Command(0xc8); //common output scan direction:com63~com0
+  Write_Command(0xa8); //multiplex ration mode:63
+  Write_Command(0x3f);
+  Write_Command(0xd5); //display divide ratio/osc. freq. mode
+  Write_Command(0x80);
+  Write_Command(0x81); //contrast control
+  Write_Command(0x50);
+  Write_Command(0xd9); //set pre-charge period
+  Write_Command(0x21);
+  Write_Command(0x20); //Set Memory Addressing Mode
+  Write_Command(0x02);
+  Write_Command(0xdb); //VCOM deselect level mode
+  Write_Command(0x30);
+  Write_Command(0xad); //master configuration
+  Write_Command(0x00);
+  Write_Command(0xa4); //out follows RAM content
+  Write_Command(0xa6); //set normal display
+  Write_Command(0xaf); // display on  
   //This is for Page addressing mode
-  write_c(0X20);
-  write_c(0X02);
-  
+  Write_Command(0X20);
+  Write_Command(0X02);
 }
 
 /***************************************************************************//**
@@ -95,9 +97,9 @@ void Oled_put_char (char char_to_print)
   
   for (a=0; a<5; a++)
   {
-    write_d(pgm_read_byte(&myfont[char_to_print][a]));
+    Write_Data(pgm_read_byte(&myfont[char_to_print][a]));
   }
-  write_d(0x00);
+  Write_Data(0x00);
 }
 
 /***************************************************************************//**
@@ -109,14 +111,14 @@ void Oled_put_char (char char_to_print)
 void Oled_home(void)
 {
   //This is for Page addressing mode
-  write_c(0X20);
-  write_c(0X02);
+  Write_Command(0X20);
+  Write_Command(0X02);
   
   //This is for setting the columns to be used
-  write_c(0x00);
-  write_c(0x10);
+  Write_Command(0x00);
+  Write_Command(0x10);
   //Start page address
-  write_c(0xb0);     
+  Write_Command(0xb0);     
 }
 
 /***************************************************************************//**
@@ -128,21 +130,21 @@ void Oled_home(void)
 void Oled_goto_line(unsigned char line)
 {  
   //This is for Page addressing mode
-  write_c(0X20);
-  write_c(0X02);
+  Write_Command(0X20);
+  Write_Command(0X02);
   
   //This is for setting the columns to be used
-  write_c(0x00);
-  write_c(0x10);
+  Write_Command(0x00);
+  Write_Command(0x10);
   //Start page address
   if ((line >= 0) && (line < 8))
   {
     line = line | 0xb0;
-    write_c(line);
+    Write_Command(line);
   }
   else
   {
-    write_c(0xb0);
+    Write_Command(0xb0);
   }      
 }
 
@@ -158,7 +160,7 @@ void Oled_clear_line(unsigned char line_to_clear)
   unsigned char a;
   for (a=0; a<128; a++)
   {
-    write_d(0x00);
+    Write_Data(0x00);
   }    
 }
 
@@ -168,7 +170,7 @@ void Oled_clear_line(unsigned char line_to_clear)
  * @return 	None.
  * @date	  16.09.2013 
 *******************************************************************************/
-void Oled_clear_screen(void)
+void Oled_Clear_Screen(void)
 {    
   Oled_clear_line(0);
   Oled_clear_line(1);
@@ -202,10 +204,10 @@ void Oled_pos(unsigned char page_num, unsigned char Col_num)
   temp_Col =  temp_Col & 0x0F;
   //Set the command for the four higher column bits
   temp_Col = temp_Col | 0x10;
-  write_c(temp_Col);
+  Write_Command(temp_Col);
   //Set the command for the four lower column bits 
   temp_Col = Col_num & 0x0F;  
-  write_c(temp_Col);
+  Write_Command(temp_Col);
 }
 
 /***************************************************************************//**
@@ -272,7 +274,7 @@ void Oled_Refresh(struct MenuStruct * ptrMenu)
   MenuLenght = MenuLenght - '0';      
    
   //---Clear the Oled screen and go to the first position for printing the Title---
-  Oled_clear_screen();
+  Oled_Clear_Screen();
   Oled_pos(1,5);
   
   //---Read the pointer of the title string and print it on the Oled---
@@ -313,14 +315,14 @@ void Oled_Refresh(struct MenuStruct * ptrMenu)
  * @return 	None.
  * @date	  23.09.2013 
 *******************************************************************************/
-void RefreshPageSRAM(unsigned int PagetoPrint)
+void Refresh_Page_From_SRAM(unsigned int PagetoPrint)
 {
   unsigned char a, i = 0;
   
   for (i = 0; i < 0x80; i++)
   {
-    a = SRAMReadByte(PagetoPrint + i);
-    write_d(a);    
+    a = SRAM_Read_Byte(PagetoPrint + i);
+    Write_Data(a);    
   }  
 }
 
@@ -330,13 +332,13 @@ void RefreshPageSRAM(unsigned int PagetoPrint)
  * @return 	None.
  * @date	  25.09.2013 
 *******************************************************************************/
-void OledRefreshFromSRAM(void)
+void Oled_Refresh_From_SRAM(void)
 {
   unsigned int PageNum;  
   
   for (PageNum = 0; PageNum < 8; PageNum++)
   {
     Oled_goto_line(PageNum);    
-    RefreshPageSRAM(0x100 * PageNum);    
+    Refresh_Page_From_SRAM(0x100 * PageNum);    
   }
 }

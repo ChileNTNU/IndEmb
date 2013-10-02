@@ -8,7 +8,6 @@
 /******************************************************************************/
 /* Include Files                                                              */
 /******************************************************************************/
-
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "../Header/GlobalDef.h"
@@ -42,12 +41,11 @@ void UART_Init(void)
              (1<<UCSZ00);             //Character size 8
   UBRR0L =  (uint8_t)UBRR_VALUE & 0xFF;
   UBRR0H =  (uint8_t)(UBRR_VALUE >> 8);     //Sets the Baud Rate High Byte
-  bfReg_RxD_Enable    =  C_ENABLE;          //Enables Receive
-  bfReg_TxD_Enable    =  C_ENABLE;          //Enables Transmission
-  bfReg_RxInterEnable =  C_ENABLE;          //Enables Reception Interrupt
-  bfReg_TxInterEnable =  C_DISABLE;         //Enables Transmission Interrupt
+  bfReg_Rx_Enable      =  C_ENABLE;          //Enables Receive
+  bfReg_Tx_Enable      =  C_ENABLE;          //Enables Transmission
+  bfReg_Rx_InterEnable =  C_ENABLE;          //Enables Reception Interrupt
+  bfReg_Tx_InterEnable =  C_DISABLE;         //Enables Transmission Interrupt
 }
-
 
 /***************************************************************************//**
  * @brief 	Sends a character over the UART.
@@ -58,11 +56,11 @@ void UART_Init(void)
 *******************************************************************************/
 int UART_put_char(char data_to_send, FILE* DummyFile)
 {
-    while(!bfReg_TxBufferEmpty)
-    {      
-    }
-    UDR0 = data_to_send;
-    return 0;
+  while(!bfReg_TxBufferEmpty)
+  {      
+  }
+  UDR0 = data_to_send;
+  return 0;
 }
   
 /*

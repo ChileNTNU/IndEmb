@@ -30,14 +30,17 @@
 #define C_TRUE                   (1)
 #define C_FALSE                  (0)
 
-#define C_DISABLE               (0)
-#define C_ENABLE                (1)
+#define C_DISABLE                (0)
+#define C_ENABLE                 (1)
 
-#define C_LED_ON                (0)
-#define C_LED_OFF               (1)
+#define C_LED_ON                 (0)
+#define C_LED_OFF                (1)
 
-#define NOP()                 asm("nop")
-#define EnableInterrupts()    __asm__ __volatile__ ("sei" ::: "memory")
+#define C_ERROR                  (-1)
+#define C_SUCCESS                (0)
+
+#define NOP()                    asm("nop")
+#define EnableInterrupts()       __asm__ __volatile__ ("sei" ::: "memory")
 
 enum Direction {Right,Left,Up,Down,Neutral};
 

@@ -5,6 +5,9 @@
  *   @author Tobias Franzen and Emilio Garcia
 *******************************************************************************/
 
+/******************************************************************************/
+/* Include Files                                                              */
+/******************************************************************************/
 #include "../Header/menus.h"
 #include "../Header/UserInterface.h"
 #include "../Header/UART.h"
@@ -17,7 +20,7 @@
  * @return 	None.
  * @date	  16.09.2013 
 *******************************************************************************/
-void MoveSelection (struct MenuStruct *ptrMenu, struct JoyStruct *ptrJoystick)
+void Move_Selection (struct MenuStruct *ptrMenu, struct JoyStruct *ptrJoystick)
 {
   unsigned char MenuLenght;
   int * MenuAddress;
@@ -61,7 +64,7 @@ void MoveSelection (struct MenuStruct *ptrMenu, struct JoyStruct *ptrJoystick)
  * @return 	None.
  * @date	  16.09.2013 
 *******************************************************************************/
-void ChangeMenu (struct MenuStruct *ptrMenu)
+void Change_Menu (struct MenuStruct *ptrMenu)
 {  
   char * MenuAddress;
   char SelectedMenu;
@@ -74,7 +77,5 @@ void ChangeMenu (struct MenuStruct *ptrMenu)
   SelectedMenu = pgm_read_byte(&MenuAddress[ptrMenu->SelectedMenu-1]);
   //3. Third you have to read the actual value from flash. This gets you the value
   ptrMenu->Menu_to_print = SelectedMenu;
-  ptrMenu->SelectedMenu = 1;
-  
+  ptrMenu->SelectedMenu = 1;  
 }
-

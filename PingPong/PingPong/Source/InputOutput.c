@@ -9,15 +9,17 @@
 /******************************************************************************/
 /* Include Files                                                              */
 /******************************************************************************/
-
 #include "../Header/GlobalDef.h"
 #include "../Header/InputOutput.h"
 #include <avr/io.h>
 
+/******************************************************************************/
+/* Global Variables                                                           */
+/******************************************************************************/
 union Ubyte_def ButtonsFlags;    
 
 /***************************************************************************//**
- * @brief   Initializes all in- and outputs
+ * @brief   Initializes all in and outputs
  * @param   None.
  * @return 	None.
  * @date	  11.09.2013 
@@ -25,8 +27,6 @@ union Ubyte_def ButtonsFlags;
 void IO_Init(void)
 {
   //For the heartbeat
-  //DDRE = 0x04;
-  //PORTE = 0x04;
   pinHeartbeatDir = C_OUT;
   pinHeartbeat    = C_LED_OFF;
   
@@ -35,7 +35,6 @@ void IO_Init(void)
   pinJoyButtonPull = C_ON;
   pinLeftButtonDir = C_IN;  
   pinRightButtonDir = C_IN;
-  
 }
 
 /***************************************************************************//**
@@ -44,7 +43,7 @@ void IO_Init(void)
  * @return 	None.
  * @date	  11.09.2013 
 *******************************************************************************/
-void ReadButtons (void)
+void Read_Buttons (void)
 {  
   if ((bfPrevJoyButt == C_ON) &&(pinJoyButton == C_OFF))           
   {

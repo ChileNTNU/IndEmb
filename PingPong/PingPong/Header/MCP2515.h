@@ -18,45 +18,37 @@
 /******************************************************************************/
 #define DUMMY             (0xFF)
 
+//Command Modes
+#define MCP2515_NORMAL_MODE     (0x00)
+#define MCP2515_SLEEP_MODE      (0x20)
+#define MCP2515_LOOPBACK_MODE   (0x40)
+#define MCP2515_LISTEN_MODE     (0x50)
+#define MCP2515_CONFIG_MODE     (0x80)
+
 //Commands
-#define RESET             (0b11000000)
-#define READ              (0b00000011)
-#define READ_RX_BUFFER    (0b10010000)
-#define READ_BUFFER_0     (READ_RX_BUFFER)
-#define READ_BUFFER_1     (READ_RX_BUFFER | 0b00000010)
-#define READ_BUFFER_2     (READ_RX_BUFFER | 0b00000100) 
-#define READ_BUFFER_3     (READ_RX_BUFFER | 0b00000110)  
-#define WRITE             (0b00000010)
-#define LOAD_TX_BUFFER    (0b01000000)
-#define LOAD_BUFFER_0     (LOAD_TX_BUFFER)
-#define LOAD_BUFFER_1     (LOAD_TX_BUFFER | 0b00000001)
-#define LOAD_BUFFER_2     (LOAD_TX_BUFFER | 0b00000010)
-#define LOAD_BUFFER_3     (LOAD_TX_BUFFER | 0b00000011)
-#define LOAD_BUFFER_4     (LOAD_TX_BUFFER | 0b00000100)
-#define LOAD_BUFFER_5     (LOAD_TX_BUFFER | 0b00000101)
-#define RTS               (0b10000000)
-#define RTS_BUFFER_0      (RTS)
-#define RTS_BUFFER_1      (RTS | 0b00000001)
-#define RTS_BUFFER_2      (RTS | 0b00000010)
-#define RTS_BUFFER_3      (RTS | 0b00000011)
-#define RTS_BUFFER_4      (RTS | 0b00000100)
-#define RTS_BUFFER_5      (RTS | 0b00000101)
-#define READ_STATUS       (0b10100000)
-#define RX_STATUS         (0b10110000)
-#define BIT_MODIFY        (0b00000101)
-/*
-#define MCP_LOAD_TX0	0x40
-#define MCP_LOAD_TX1	0x42
-#define MCP_LOAD_TX2	0x44
-
-#define MCP_RTS_TX0		0x81
-#define MCP_RTS_TX1		0x82
-#define MCP_RTS_TX2		0x84
-#define MCP_RTS_ALL		0x87
-
-#define MCP_READ_RX0	0x90
-#define MCP_READ_RX1	0x94
-*/
+#define RESET               (0b11000000)
+#define WRITE               (0b00000010)
+#define READ                (0b00000011)
+#define BIT_MODIFY          (0b00000101)
+#define READ_RX_BUFFER      (0b10010000)
+#define READ_BUFFER_0_ID    (READ_RX_BUFFER)
+#define READ_BUFFER_0_DATA  (READ_RX_BUFFER | 0b00000010)
+#define READ_BUFFER_1_ID    (READ_RX_BUFFER | 0b00000100) 
+#define READ_BUFFER_1_DATA  (READ_RX_BUFFER | 0b00000110)  
+#define LOAD_TX_BUFFER      (0b01000000)
+#define LOAD_BUFFER_0_ID    (LOAD_TX_BUFFER)
+#define LOAD_BUFFER_0_DATA  (LOAD_TX_BUFFER | 0b00000001)
+#define LOAD_BUFFER_1_ID    (LOAD_TX_BUFFER | 0b00000010)
+#define LOAD_BUFFER_1_DATA  (LOAD_TX_BUFFER | 0b00000011)
+#define LOAD_BUFFER_2_ID    (LOAD_TX_BUFFER | 0b00000100)
+#define LOAD_BUFFER_2_DATA  (LOAD_TX_BUFFER | 0b00000101)
+#define RTS                 (0b10000000)
+#define RTS_TX_BUFFER_0     (RTS | 0b00000001)
+#define RTS_TX_BUFFER_1     (RTS | 0b00000010)
+#define RTS_TX_BUFFER_2     (RTS | 0b00000100)
+#define RTS_ALL_BUFFERS		  (RTS | 0b00000111)
+#define READ_STATUS         (0b10100000)
+#define RX_STATUS           (0b10110000)
 
 // Define MCP2515 register addresses
 #define MCP_RXF0SIDH	0x00
@@ -166,20 +158,9 @@
 /* Macros for the registers. Made by us                                       */
 /******************************************************************************/
 
-/*
-#define bfSS                    REGISTER_BIT(PORTB,4)      // The slave select is inverted
-#define bfMOSI                  REGISTER_BIT(PORTB,5)
-#define bfMISO                  REGISTER_BIT(PORTB,6)
-#define bfSCK                   REGISTER_BIT(PORTB,7)
-
-#define bfReg_SPIinterFlag      REGISTER_BIT(SPSR,7)      // This is the flag which is set when an interrupt occurs
-#define bfReg_SPIinterEnable    REGISTER_BIT(SPCR,7)      // Interrupt enable flag for SPI
-*/
-
 /******************************************************************************/
 /* Global variables                                                           */
 /******************************************************************************/
-//extern unsigned char SPIRxData;
 
 /******************************************************************************/
 /* Function prototypes                                                        */
@@ -188,6 +169,11 @@ void MCP2515_Reset(void);
 unsigned char MCP2515_Read(unsigned char Address);
 void MCP2515_Write(unsigned char Address, unsigned char Data_to_send);
 void MCP2515_Bit_Modify(unsigned char Address, unsigned char Mask, unsigned char Data_to_send);
+void MCP2515_Load_Tx_Buffer(unsigned char Buffer_to_send, unsigned char Data_to_send);
+void MCP2515_Request_to_Send(unsigned char Buffer_to_send);
+unsigned char MCP2515_Read_Rx_Buffer(unsigned char Cmd_Read_Rx_Buffer);
+unsigned char MCP2515_Read_Status(void);
+char MCP2515_Change_Mode(unsigned char MCP2515_Mode);
 void MCP2515_Init(void);
 
 #endif /* MCP2515_H_ */

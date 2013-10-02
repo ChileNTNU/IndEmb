@@ -5,7 +5,6 @@
  *   @author Tobias Franzen and Emilio Garcia
 *******************************************************************************/ 
 
-
 #ifndef INPUTOUTPUT_H_
 #define INPUTOUTPUT_H_
 
@@ -45,11 +44,10 @@ extern union Ubyte_def ButtonsFlags;
 #define pinHeartbeatDir   REGISTER_BIT(DDRE,2)
 #define pinHeartbeat      REGISTER_BIT(PORTE,2)
 
-
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
 void IO_Init(void);
-void ReadButtons (void);
+void Read_Buttons(void);
 
 #endif /* INPUTOUTPUT_H_ */

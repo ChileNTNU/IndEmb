@@ -78,7 +78,7 @@ void SRAM_test(void)
  * @return 	None.
  * @date	  04.09.2013 
 *******************************************************************************/
-void SRAMStoreByte(unsigned char data, unsigned int address)
+void SRAM_Store_Byte(unsigned char data, unsigned int address)
 {
   volatile char *ext_ram = (char *) 0x1800;
   ext_ram = ext_ram + address;
@@ -91,7 +91,7 @@ void SRAMStoreByte(unsigned char data, unsigned int address)
  * @return 	None.
  * @date	  04.09.2013 
 *******************************************************************************/
-unsigned char SRAMReadByte(unsigned int address)
+unsigned char SRAM_Read_Byte(unsigned int address)
 {
   volatile char *ext_ram = (char *) 0x1800;
   ext_ram = ext_ram + address;
@@ -105,28 +105,28 @@ unsigned char SRAMReadByte(unsigned int address)
  * @return 	None.
  * @date	  21.09.2013 
 *******************************************************************************/
-void SRAMStoreFont(char char_to_print, unsigned int start_address)
+void SRAM_Store_Font(char char_to_print, unsigned int start_address)
 {
-   unsigned char a;
+  unsigned char a;
    
-   if(char_to_print < 32)
-   {
-     char_to_print = 32;
-   }
+  if(char_to_print < 32)
+  {
+    char_to_print = 32;
+  }
    
-   if (char_to_print > 127)
-   {
-     char_to_print = 127;
-   }
+  if (char_to_print > 127)
+  {
+    char_to_print = 127;
+  }
    
-   char_to_print = char_to_print - 32;
+  char_to_print = char_to_print - 32;
    
-   for (a=0; a<5; a++)
-   {
-     SRAMStoreByte(pgm_read_byte(&myfont[char_to_print][a]),start_address);
-     start_address++;
-   }
-   SRAMStoreByte(0x00,start_address);   
+  for (a=0; a<5; a++)
+  {
+    SRAM_Store_Byte(pgm_read_byte(&myfont[char_to_print][a]),start_address);
+    start_address++;
+  }
+  SRAM_Store_Byte(0x00,start_address);   
 }
 
 /***************************************************************************//**
@@ -136,7 +136,7 @@ void SRAMStoreFont(char char_to_print, unsigned int start_address)
  * @return 	None.
  * @date	  23.09.2013 
 *******************************************************************************/
-void SRAMStorePage(char * String_to_save, unsigned int Page)
+void SRAM_Store_Page(char * String_to_save, unsigned int Page)
 {
   unsigned char i = 0;
     
@@ -145,7 +145,7 @@ void SRAMStorePage(char * String_to_save, unsigned int Page)
     SRAMStoreFont(String_to_save[i],Page + (i*6));
     i++;
   }
-  SRAMStoreByte(0x00,Page + (i*6));         
+  SRAM_Store_Byte(0x00,Page + (i*6));         
 }
 
 /***************************************************************************//**
@@ -155,7 +155,7 @@ void SRAMStorePage(char * String_to_save, unsigned int Page)
  * @return 	None.
  * @date	  23.09.2013 
 *******************************************************************************/
-void SRAMStoreString_P(const char * pChar_to_print, unsigned int Address)
+void SRAM_Store_String_P(const char * pChar_to_print, unsigned int Address)
 {
   unsigned char i = 0;
   unsigned char Value_to_print;
@@ -163,7 +163,7 @@ void SRAMStoreString_P(const char * pChar_to_print, unsigned int Address)
   
   while ((Value_to_print != '\0')&&(i < 21))
   {    
-    SRAMStoreFont(Value_to_print,Address + (i * 6));
+    SRAM_Store_Font(Value_to_print,Address + (i * 6));
     i++;
     Value_to_print = pgm_read_byte(&pChar_to_print[i]);
   }   
@@ -175,13 +175,13 @@ void SRAMStoreString_P(const char * pChar_to_print, unsigned int Address)
  * @return 	None.
  * @date	  23.09.2013 
 *******************************************************************************/
-void SRAMclean (void)
+void SRAM_Clean (void)
 {
   int SRAMaddress =  PAGE0;  
   
   for (SRAMaddress = 0; SRAMaddress < 0x800; SRAMaddress++)
   {
-    SRAMStoreByte(0x00,SRAMaddress);
+    SRAM_Store_Byte(0x00,SRAMaddress);
   }
 }
 
@@ -212,7 +212,7 @@ void SRAM_Refresh_Menu(struct MenuStruct * ptrMenu)
   MenuLenght = MenuLenght - '0';
   
   //---Clear the Oled screen and go to the first position for printing the Title---
-  SRAMclean();
+  SRAM_Clean();
   //Oled_pos(1,5);
   SRAMaddress = PAGE1 + 30; //Fifth character, each character has 6 columns
   
@@ -220,7 +220,7 @@ void SRAM_Refresh_Menu(struct MenuStruct * ptrMenu)
   MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
   ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_TITLE_POS]);
     
-  SRAMStoreString_P((const char *)ItemFromMenu,SRAMaddress);
+  SRAM_Store_String_P((const char *)ItemFromMenu,SRAMaddress);
   
   //---Go to the start position of the Menu option---
   //Oled_pos(3,2);
@@ -231,11 +231,11 @@ void SRAM_Refresh_Menu(struct MenuStruct * ptrMenu)
     //---Check if the menu which is going to be printed is the selected one---
     if (ptrMenu->SelectedMenu == i)
     {
-      SRAMStoreFont(0xFF,SRAMaddress); //Very last font. In this case the smiley face :)
+      SRAM_Store_Font(0xFF,SRAMaddress); //Very last font. In this case the smiley face :)
     }
     else
     {
-      SRAMStoreFont(' ',SRAMaddress);
+      SRAM_Store_Font(' ',SRAMaddress);
     }
     //---Print the corresponding menu option---
     MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
@@ -243,7 +243,7 @@ void SRAM_Refresh_Menu(struct MenuStruct * ptrMenu)
     ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_FIRST_OPTION_POS + i - 1]);
         
     SRAMaddress = SRAMaddress + 6; //Go to next character
-    SRAMStoreString_P((const char *)ItemFromMenu,SRAMaddress);   
+    SRAM_Store_String_P((const char *)ItemFromMenu,SRAMaddress);   
     
     //---Go to the next position of the next menu option
     //Oled_pos(i+3,2);

@@ -9,14 +9,15 @@
 /******************************************************************************/
 /* Include Files                                                              */
 /******************************************************************************/
-
 #include "../Header/ADC.h"
 #include "../Header/GlobalDef.h"
 #include "../Header/UART.h"
 #include <util/delay.h>
 
+/******************************************************************************/
+/* Global Variables                                                           */
+/******************************************************************************/
 unsigned char ADC_array[4];
-
 
 /***************************************************************************//**
  * @brief 	Reads the ADC value at specific channel using the external memory bus
@@ -42,7 +43,7 @@ unsigned char ADC_Read(unsigned char channel)
  * @return 	None.
  * @date	  09.09.2013 
 *******************************************************************************/
-void CalibrateJoystick(struct JoyStruct *pointer_Joystick)
+void Calibrate_Joystick(struct JoyStruct * pointer_Joystick)
 {
   unsigned int Joy_X;
   unsigned int Joy_Y;
@@ -58,7 +59,7 @@ void CalibrateJoystick(struct JoyStruct *pointer_Joystick)
  * @return 	None.
  * @date	  09.09.2013 
 *******************************************************************************/
-void ReadJoystick(struct JoyStruct * pointer_Joystick)
+void Read_Joystick(struct JoyStruct * pointer_Joystick)
 {
   unsigned int Joy_X;
   unsigned int Joy_Y;
@@ -134,7 +135,7 @@ void ReadJoystick(struct JoyStruct * pointer_Joystick)
  * @return 	None.
  * @date	  09.09.2013 
 *******************************************************************************/
-void PrintJoystickPosition(struct JoyStruct * pointer_Joystick)
+void Print_Joystick_Position(struct JoyStruct * pointer_Joystick)
 {
   printf("\r\n---Joystick data---\r\n");
   printf("Joystick Xpos: %d%%\r\n",pointer_Joystick->Xpos);
@@ -168,7 +169,7 @@ void PrintJoystickPosition(struct JoyStruct * pointer_Joystick)
  * @return 	None.
  * @date	  11.09.2013 
 *******************************************************************************/
-void ReadSliders(struct SlideStruct * pointer_Sliders)
+void Read_Sliders(struct SlideStruct * pointer_Sliders)
 {
   unsigned int Slider_L;
   unsigned int Slider_R;
@@ -191,7 +192,7 @@ void ReadSliders(struct SlideStruct * pointer_Sliders)
  * @return 	None.
  * @date	  11.09.2013 
 *******************************************************************************/
-void PrintSlidersPosition(struct SlideStruct * pointer_Sliders)
+void Print_Sliders_Position(struct SlideStruct * pointer_Sliders)
 {
   printf("\r\n---Sliders data---\r\n");
   printf("Slider Left: %d%%\r\n",pointer_Sliders->LeftSlider);
