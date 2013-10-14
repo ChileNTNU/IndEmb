@@ -32,8 +32,7 @@ void UART_Init(void)
              (0<<TXCIE0)|             //Tx Interrupt Disable
              (0<<RXEN0)|              //USART Receiver Disable
              (0<<TXEN0);              //USART Transmitter Disable
-  UCSR0C =   (1<<URSEL0)|             //For accessing the UCSRC register
-             (0<<UMSEL0)|             //Asynchronous mode
+  UCSR0C =   (0<<UMSEL0)|             //Asynchronous mode
              (0<<UPM00)|              //No parity
              (0<<UPM01)|              //No parity
              (0<<USBS0)|              //One Stop Bit
@@ -77,7 +76,7 @@ ISR(USART0_TX_vect)
  * @return 	None.
  * @date	  28.08.2013 
 *******************************************************************************/
-ISR(USART0_RXC_vect)
+ISR(USART0_RX_vect)
 {
   bfReg_RxFlag = C_OFF;  
   RxData = UDR0;

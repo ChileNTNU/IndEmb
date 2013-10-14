@@ -1,12 +1,12 @@
 ﻿/***************************************************************************//**
- *   @file   CAN.h
- *   @brief  Header file for CAN.c
- *	 @date	 01.10.2013
+ *   @file   Timer.h
+ *   @brief  Header file to Timer.c
+ *	 @date	 09.09.2013
  *   @author Tobias Franzen and Emilio Garcia
 *******************************************************************************/
 
-#ifndef CAN_H_
-#define CAN_H_
+#ifndef TIMER_H_
+#define TIMER_H_
 
 /******************************************************************************/
 /* Include Files                                                              */
@@ -14,36 +14,24 @@
 #include "../Header/GlobalDef.h"
 
 /******************************************************************************/
+/* Global variables                                                           */
+/******************************************************************************/
+extern volatile union Ubyte_def TimerFlags;
+
+/******************************************************************************/
 /* Definitions                                                                */
 /******************************************************************************/
-typedef struct{
-  unsigned int  id;
-  unsigned char length;
-  unsigned char data[8];
-  }CANStruct;
+#define bf10msFlag              TimerFlags.Ubit.b0      // 10ms flag
+#define bf100msFlag             TimerFlags.Ubit.b1      // 100ms flag
+#define bf1sFlag                TimerFlags.Ubit.b2      // 1 sec flag
 
 /******************************************************************************/
-/* Macros for the registers. Made by us                                       */
-/******************************************************************************/
-
-/******************************************************************************/
-/* Global variables                                                           */
+/* Macros for the registers                                                   */
 /******************************************************************************/
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
-char Can_Init(void);
-char Can_Messsage_Send(CANStruct * Message_to_send, char Buffer_num);
-void Can_Messsage_Receive(CANStruct * Message_to_send, char Buffer_num);
-void Can_Reception(CANStruct * Message_received);
-void Can_Print_Message(CANStruct * Message_received);
-void Can_Interrupt_Vect(void);
+void Timer_Init(void);
 
-/*
-void Can_Error(void);
-void Can_Transmit_Complete(void);
-void Can_Data_Receive(void);
-*/
-
-#endif /* CAN_H_ */
+#endif /* TIMER_H_ */
