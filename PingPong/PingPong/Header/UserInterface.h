@@ -28,7 +28,7 @@
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
-void Move_Selection(struct MenuStruct *ptrMenu, struct JoyStruct *ptrJoystick);
+void Move_Selection(struct MenuStruct *ptrMenu, JoyStruct *ptrJoystick);
 void Change_Menu(struct MenuStruct *ptrMenu);
 
 #endif /* USERINTERFACE_H_ */

@@ -37,9 +37,9 @@
 *******************************************************************************/
 int main(void)
 {  
-  unsigned char a,b;
+  //unsigned char a,b;
   
-  struct JoyStruct Joystick_main;
+  JoyStruct Joystick_main;
   struct SlideStruct Sliders;
   struct MenuStruct Menu;
   Menu.Menu_to_print = 0;
@@ -87,22 +87,26 @@ int main(void)
     
     if(bf100msFlag == C_ON)
     {
-      bf100msFlag = C_OFF;
-      pinHeartbeat = ~pinHeartbeat;      
+      bf100msFlag = C_OFF;      
       Read_Joystick(&Joystick_main);
       Read_Sliders(&Sliders);                  
       Move_Selection(&Menu, &Joystick_main);
       //Oled_Refresh(&Menu);
       SRAM_Refresh_Menu(&Menu);
       Oled_Refresh_From_SRAM();
+      //Builds the CAN message with the joystick data
+      Can_Message_Joystick(&CAN_message_send, &Joystick_main);
+      Can_Messsage_Send(&CAN_message_send,BUFFER_0); 
+      //Checks which interrupt occured on the CAN controller                                       
       Can_Interrupt_Vect();
+      //Receives a message if an interrupt has occured
       Can_Reception(&CAN_message_receive);
     }
     
     if(bf1sFlag == C_ON)
     {
       bf1sFlag = C_OFF;                  
-                  
+      pinHeartbeat = ~pinHeartbeat;                  
       if (bfJoyButtFlag == C_ON)
       {
         bfJoyButtFlag = C_OFF;
@@ -113,7 +117,7 @@ int main(void)
       if (bfLeftButtFlag == C_ON)
       {
         bfLeftButtFlag = C_OFF;
-        Print_Sliders_Position(&Sliders);
+        //Print_Sliders_Position(&Sliders);
         //Oled display clean        
         Oled_Clear_Screen();
         Can_Print_Message(&CAN_message_receive);

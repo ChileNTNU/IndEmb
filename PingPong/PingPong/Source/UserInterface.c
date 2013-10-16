@@ -20,7 +20,7 @@
  * @return 	None.
  * @date	  16.09.2013 
 *******************************************************************************/
-void Move_Selection (struct MenuStruct *ptrMenu, struct JoyStruct *ptrJoystick)
+void Move_Selection (struct MenuStruct *ptrMenu, JoyStruct *ptrJoystick)
 {
   unsigned char MenuLenght;
   int * MenuAddress;

@@ -43,7 +43,7 @@ unsigned char ADC_Read(unsigned char channel)
  * @return 	None.
  * @date	  09.09.2013 
 *******************************************************************************/
-void Calibrate_Joystick(struct JoyStruct * pointer_Joystick)
+void Calibrate_Joystick(JoyStruct * pointer_Joystick)
 {
   unsigned int Joy_X;
   unsigned int Joy_Y;
@@ -59,7 +59,7 @@ void Calibrate_Joystick(struct JoyStruct * pointer_Joystick)
  * @return 	None.
  * @date	  09.09.2013 
 *******************************************************************************/
-void Read_Joystick(struct JoyStruct * pointer_Joystick)
+void Read_Joystick(JoyStruct * pointer_Joystick)
 {
   unsigned int Joy_X;
   unsigned int Joy_Y;
@@ -135,7 +135,7 @@ void Read_Joystick(struct JoyStruct * pointer_Joystick)
  * @return 	None.
  * @date	  09.09.2013 
 *******************************************************************************/
-void Print_Joystick_Position(struct JoyStruct * pointer_Joystick)
+void Print_Joystick_Position(JoyStruct * pointer_Joystick)
 {
   printf("\r\n---Joystick data---\r\n");
   printf("Joystick Xpos: %d%%\r\n",pointer_Joystick->Xpos);

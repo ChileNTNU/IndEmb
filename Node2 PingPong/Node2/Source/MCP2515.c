@@ -234,8 +234,11 @@ char MCP2515_Init(void)
   //MCP2515_Bit_Modify(MCP_CANINTE,0x1F,0x1F);  
   
   //Enable just reception interrupts (Buffer 0 and 1)
-  MCP2515_Bit_Modify(MCP_CANINTE,0xFF,0x03);
+  //MCP2515_Bit_Modify(MCP_CANINTE,0xFF,0x03);
    
+  //Enable just reception interrupts (Buffer 0)
+  MCP2515_Bit_Modify(MCP_CANINTE,0xFF,0x01);
+  
   i = MCP2515_Read(MCP_CANSTAT);
   i = i & 0xE0;
   if (i != 0x80)

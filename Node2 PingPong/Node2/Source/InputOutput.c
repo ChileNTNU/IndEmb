@@ -14,11 +14,6 @@
 #include "../Header/InputOutput.h"
 #include "../Header/UART.h"
 
-/******************************************************************************/
-/* Global Variables                                                           */
-/******************************************************************************/
-union Ubyte_def ButtonsFlags;    
-
 /***************************************************************************//**
  * @brief   Initializes all in and outputs
  * @param   None.
@@ -32,46 +27,23 @@ void IO_Init(void)
   pinHeartbeat    = C_LED_OFF;
   
   //For reading the buttons
-  pinJoyButtonDir = C_IN;
-  pinJoyButtonPull = C_ON;
-  pinLeftButtonDir = C_IN;  
-  pinRightButtonDir = C_IN;
-  
-  //Enable external interrupts
-  DDRE &= ~(1<<PE0);
-  //Enable Pullup on interrupt pin
-  PORTE |= (1<<PE0);
-  //First it has to be cleared
-  GICR &= ~(1 << INT2);
-  //Clear ISC2 for enabling interrupt on falling edge
-  EMCUCR &= ~(1 << ISC2);
-  //Enable INT2
-  GICR |= (1 << INT2);
-}
+//  pinJoyButtonDir = C_IN;
+//  pinJoyButtonPull = C_ON;
+//  pinLeftButtonDir = C_IN;  
+//  pinRightButtonDir = C_IN;
 
-/***************************************************************************//**
- * @brief 	Reads the values of the touch buttons on the Multifunction Card
- * @param   None.
- * @return 	None.
- * @date	  11.09.2013 
-*******************************************************************************/
-void Read_Buttons (void)
-{  
-  if ((bfPrevJoyButt == C_ON) &&(pinJoyButton == C_OFF))           
-  {
-    bfJoyButtFlag = C_ON;
-  }
-  bfPrevJoyButt = pinJoyButton;
+/*
+Set pin for PWM
+Set pins for I2C
+Set pin for ADC
+*/
   
-  if ((bfPrevLeftButt == C_OFF) &&(pinLeftButton == C_ON))
-  {
-    bfLeftButtFlag = C_ON;
-  }
-  bfPrevLeftButt = pinLeftButton;
-  
-  if ((bfPrevRightButt == C_OFF) &&(pinRightButton == C_ON))
-  {
-    bfRightButtFlag = C_ON;
-  }
-  bfPrevRightButt = pinRightButton;   
+  //Setting PD2 as input
+  DDRD &= ~(1<<PD2);
+  //Enable Pullup on interrupt pin
+  PORTD |= (1<<PD2);
+  //Enable interrupt on falling edge
+  EICRA |= (1 << ISC21);
+  //Enable INT2
+  EIMSK |= (1 << INT2);
 }

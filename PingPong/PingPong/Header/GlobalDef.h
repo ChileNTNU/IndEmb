@@ -65,7 +65,7 @@ union   Ubyte_def
 	uint8_t      Ubyte;
 };
 
-struct JoyStruct
+typedef struct
 {
   signed char Xpos;  
   signed char Ypos;
@@ -73,7 +73,7 @@ struct JoyStruct
   signed char Yoffset;
   enum Direction PrevDir;
   enum Direction Dir;
-};
+} JoyStruct;
 
 struct SlideStruct
 {

@@ -28,7 +28,7 @@ char Can_Init(void)
     return C_ERROR;
   }
   
-  if(MCP2515_Change_Mode(MCP2515_LOOPBACK_MODE) == C_ERROR)
+  if(MCP2515_Change_Mode(MCP2515_NORMAL_MODE) == C_ERROR)
   {
     return C_ERROR;    
   }
@@ -104,7 +104,7 @@ char Can_Messsage_Send(CANStruct * Message_to_send, char Buffer_num)
  * @return 	None
  * @date	  09.10.2013 
 *******************************************************************************/
-void Can_Messsage_Receive(CANStruct * Message_to_send, char Buffer_num)
+void Can_Messsage_Receive(CANStruct * Message_to_receive, char Buffer_num)
 {    
   unsigned char Buffer_Rx_ID;
   unsigned char Buffer_Rx_Data;
@@ -126,9 +126,9 @@ void Can_Messsage_Receive(CANStruct * Message_to_send, char Buffer_num)
         break;        
   }
   //Receives the Header of the CAN message
-  MCP2515_Read_Rx_Buffer_Header(Buffer_Rx_ID,Message_to_send);
+  MCP2515_Read_Rx_Buffer_Header(Buffer_Rx_ID,Message_to_receive);
   //Receives the Data of the CAN message
-  MCP2515_Read_Rx_Buffer_Data(Buffer_Rx_Data,Message_to_send);
+  MCP2515_Read_Rx_Buffer_Data(Buffer_Rx_Data,Message_to_receive);
 }
 
 

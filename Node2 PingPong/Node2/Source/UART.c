@@ -26,6 +26,8 @@ uint8_t RxData;
 *******************************************************************************/
 void UART_Init(void)
 { 
+  //It does not require to configure the Pins as outputs or inputs
+  //They are configured by default
   UCSR0A =   (0<<RXC0)|               //Receive complete flag clear
              (0<<TXC0);               //Transmit complete flag clear
   UCSR0B =   (0<<RXCIE0)|             //Rx Interrupt Disable

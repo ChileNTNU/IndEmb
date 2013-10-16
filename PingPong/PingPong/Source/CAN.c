@@ -12,6 +12,7 @@
 #include <avr/interrupt.h>
 #include "../Header/CAN.h"
 #include "../Header/MCP2515.h"
+#include "../Header/InputOutput.h"
 #include "../Header/UART.h"
 
 /***************************************************************************//**
@@ -28,7 +29,7 @@ char Can_Init(void)
     return C_ERROR;
   }
   
-  if(MCP2515_Change_Mode(MCP2515_LOOPBACK_MODE) == C_ERROR)
+  if(MCP2515_Change_Mode(MCP2515_NORMAL_MODE) == C_ERROR)
   {
     return C_ERROR;    
   }
@@ -104,7 +105,7 @@ char Can_Messsage_Send(CANStruct * Message_to_send, char Buffer_num)
  * @return 	None
  * @date	  09.10.2013 
 *******************************************************************************/
-void Can_Messsage_Receive(CANStruct * Message_to_send, char Buffer_num)
+void Can_Messsage_Receive(CANStruct * Message_to_receive, char Buffer_num)
 {    
   unsigned char Buffer_Rx_ID;
   unsigned char Buffer_Rx_Data;
@@ -126,9 +127,9 @@ void Can_Messsage_Receive(CANStruct * Message_to_send, char Buffer_num)
         break;        
   }
   //Receives the Header of the CAN message
-  MCP2515_Read_Rx_Buffer_Header(Buffer_Rx_ID,Message_to_send);
+  MCP2515_Read_Rx_Buffer_Header(Buffer_Rx_ID,Message_to_receive);
   //Receives the Data of the CAN message
-  MCP2515_Read_Rx_Buffer_Data(Buffer_Rx_Data,Message_to_send);
+  MCP2515_Read_Rx_Buffer_Data(Buffer_Rx_Data,Message_to_receive);
 }
 
 
@@ -176,6 +177,21 @@ void Can_Print_Message(CANStruct * Message_received)
   UART_put_char(Message_received->data[5], NULL);
   UART_put_char(Message_received->data[6], NULL);
   UART_put_char(Message_received->data[7], NULL);
+}
+
+/***************************************************************************//**
+ * @brief 	Build the CAN message that contains the Joystick data
+ * @param   Message_to_send    This is the CAN message which will be sent
+ * @param   JoyData            This is the structure containing the Joystick data
+ * @return 	None
+ * @date	  16.10.2013 
+*******************************************************************************/
+void Can_Message_Joystick(CANStruct * Message_to_send, JoyStruct * JoyData)
+{
+  Message_to_send->id = JOYSTICK_ID;
+  Message_to_send->length = JOYSTICK_LENGTH;
+  Message_to_send->data[0] = JoyData->Dir;
+  Message_to_send->data[1] = (unsigned char)bfJoyButtFlag;
 }
 
 /***************************************************************************//**

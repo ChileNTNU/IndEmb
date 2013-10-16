@@ -13,10 +13,15 @@
 /******************************************************************************/
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "../Header/GlobalDef.h"
+#include <stdio.h>
+#include "../Header/GlobalDef.h" //Should be before util/delay.h
 #include <util/delay.h>
 #include "../Header/UART.h"
-#include <stdio.h>
+#include "../Header/Timer.h"
+#include "../Header/SPI.h"
+#include "../Header/MCP2515.h"
+#include "../Header/CAN.h"
+#include "../Header/InputOutput.h"
 
 /***************************************************************************//**
  * @brief 	Main software routine
@@ -25,20 +30,52 @@
 *******************************************************************************/
 int main(void)
 {  
+  //unsigned char a;
+  
+  CANStruct CAN_message_send =
+  { 0x41AF,
+    6,
+    {'A','B','C','D','E', 'F', '0', '0'}
+  };
+  //CAN_message_send.data[0] = 'A';
+  CANStruct CAN_message_receive =
+  { .id = 0x0000,
+    .length = 0
+  };
+
   
   UART_Init();
-  
-  
-  DDRB |= (1<<PB0);
-  PORTB |= (1<<PB0);
-  /*
-  DDRE |= (1<<PE1);
-  */
-  
-  fdevopen(UART_put_char, NULL);
-    while(1)
+  fdevopen(UART_put_char, NULL);  
+  SPI_Init();  
+  IO_Init();
+  Timer_Init();
+  EnableInterrupts();
+  if (Can_Init() == C_ERROR)
+  {
+    printf("¡MCP2515 not in configuration mode!");
+  }
+    
+  while(1)
+  {
+    if (bf10msFlag == C_ON)
     {
-      UART_put_char(0xAA,NULL);
+      bf10msFlag = C_OFF;
+      //PORTD ^= (1<<PD0);    //For toggling PD0 pin      
     }
-    return 0;
+    
+    if(bf100msFlag == C_ON)
+    {
+      bf100msFlag = C_OFF;
+      Can_Interrupt_Vect();
+      Can_Reception(&CAN_message_receive);
+      Can_Messsage_Send(&CAN_message_send,BUFFER_0);         
+    }  
+    if(bf1sFlag == C_ON)
+    {
+      bf1sFlag = C_OFF;
+      pinHeartbeat = ~pinHeartbeat;
+      Can_Print_Message(&CAN_message_receive);
+    }
+  }
+  return 0;
 }

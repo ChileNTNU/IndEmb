@@ -16,7 +16,7 @@
 /******************************************************************************/
 /* Definitions                                                                */
 /******************************************************************************/
-#define F_CPU                   (8000000)       //32KHz
+#define F_CPU                   (8000000)       //8MHz Internal osc
 
 #define C_OFF                    (0)
 #define C_ON                     (1)
@@ -42,6 +42,7 @@
 #define NOP()                    asm("nop")
 #define EnableInterrupts()       __asm__ __volatile__ ("sei" ::: "memory")
 
+//Enum for the joystick data
 enum Direction {Right,Left,Up,Down,Neutral};
 
 /******************************************************************************/
