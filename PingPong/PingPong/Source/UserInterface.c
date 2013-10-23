@@ -8,7 +8,7 @@
 /******************************************************************************/
 /* Include Files                                                              */
 /******************************************************************************/
-#include "../Header/menus.h"
+#include "../Header/Menus.h"
 #include "../Header/UserInterface.h"
 #include "../Header/UART.h"
 #include <avr/pgmspace.h>
@@ -63,11 +63,11 @@ void Move_Selection (struct MenuStruct *ptrMenu, JoyStruct *ptrJoystick)
   //This switch is for selecting fixed options on some menus
   switch(ptrMenu->Menu_to_print)
   {
-    case 3:
+    case HIGHSCORE_MENU_ID:
       //In case the Menu is the HIGH SCORE one, the only option possible is the fourth one which is BACK
       ptrMenu->SelectedMenu = 4;
       break;
-    case 4:
+    case GAME_ON_MENU_ID:
       //In case the Menu is the PLAYING one, the only option possible is the Third one which is BACK
       ptrMenu->SelectedMenu = 3;
       break;

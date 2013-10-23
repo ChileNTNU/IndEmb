@@ -142,7 +142,7 @@ void SRAM_Store_Page(char * String_to_save, unsigned int Page)
     
   while ((String_to_save[i] != '\0')&&(i < 21))
   {
-    SRAMStoreFont(String_to_save[i],Page + (i*6));
+    SRAM_Store_Font(String_to_save[i],Page + (i*6));
     i++;
   }
   SRAM_Store_Byte(0x00,Page + (i*6));         
@@ -247,6 +247,75 @@ void SRAM_Refresh_Menu(struct MenuStruct * ptrMenu)
     
     //---Go to the next position of the next menu option
     //Oled_pos(i+3,2);
+    SRAMaddress = (PAGE_SIZE * i) + PAGE3 + 12;
+  }  
+}
+
+/***************************************************************************//**
+ * @brief 	Saves the current menu and some items in the SRAM
+ * @param   ptrMenu    pointer to the menu which is used
+ * @param   item1      extra item 1
+ * @param   item2      extra item 2
+ * @param   item3      extra item 3
+ * @return 	None.
+ * @date	  23.10.2013 
+*******************************************************************************/
+void SRAM_Refresh_Menu_And_Items(struct MenuStruct * ptrMenu, unsigned int item1, unsigned int item2, unsigned int item3)
+{
+  int SRAMaddress;
+  unsigned char MenuLenght,i;
+  int * MenuAddress;
+  char * ItemFromMenu;
+  
+  //---Read the length of the menu---
+  //In order to read all the pointers from flash. The steps that have to be done are
+  //1. First read the pointer from the MenuList table. This table has pointer to all the possible menus
+  //   We read 16 bits because all pointer in AVR are 16 bit long
+  MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
+  //2. Second read the pointer from the Menu which is active. From here we obtain the address for the
+  //   corresponding field we want to use
+  ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_SIZE_POS]);
+  //3. Third you have to read the actual value from flash. This gets you the value
+  MenuLenght = pgm_read_byte(ItemFromMenu);
+  //4. Fourth the value has to converted from ascii to normal number by subtracting '0'
+  MenuLenght = MenuLenght - '0';
+  
+  //---Clear the Oled screen and go to the first position for printing the Title---
+  SRAM_Clean();  
+  SRAMaddress = PAGE1 + 30; //Fifth character, each character has 6 columns
+  
+  //---Read the pointer of the title string and print it on the Oled---  
+  MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
+  ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_TITLE_POS]);
+    
+  SRAM_Store_String_P((const char *)ItemFromMenu,SRAMaddress);
+  
+  //---Go to the start position of the Menu option---  
+  SRAMaddress = PAGE3 + 12; //Second character, each character has 6 columns
+  
+  for (i = 1; i <= MenuLenght; i++)
+  {
+    //---Check if the menu which is going to be printed is the selected one---
+    if (ptrMenu->SelectedMenu == i)
+    {
+      SRAM_Store_Font(0xFF,SRAMaddress); //Very last font. In this case the smiley face :)
+    }
+    else
+    {
+      SRAM_Store_Font(' ',SRAMaddress);
+    }
+    //---Print the corresponding menu option---
+    MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
+    // The +i-1 is because the index of the option menu is not corresponding to the index of this for loop
+    ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_FIRST_OPTION_POS + i - 1]);
+        
+    SRAMaddress = SRAMaddress + 6; //Go to next character
+    SRAM_Store_String_P((const char *)ItemFromMenu,SRAMaddress);       
+    
+    //TODO Print the items
+    //SRAM_Store_Font(0xFF,SRAMaddress)
+    
+    //---Go to the next position of the next menu option        
     SRAMaddress = (PAGE_SIZE * i) + PAGE3 + 12;
   }  
 }

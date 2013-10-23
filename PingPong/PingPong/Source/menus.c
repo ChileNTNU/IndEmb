@@ -138,7 +138,7 @@ const char SubCSelect[] PROGMEM = {
 
 //This is the global list of all menus
 const char * const AllMenuSelect[] PROGMEM = {
-  MainMenuSelect,    //0
+  MainMenuSelect,    //0  This leads to define MAIN_MENU_ID as 0
   SubASelect,        //1
   SubBSelect,        //2
   SubCSelect,        //3

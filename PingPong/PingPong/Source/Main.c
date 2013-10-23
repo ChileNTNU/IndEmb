@@ -81,46 +81,76 @@ int main(void)
   {    
     if (bf10msFlag == C_ON)
     {
-      bf10msFlag = C_OFF;
-      Read_Buttons();      
+      bf10msFlag = C_OFF;      
+      Read_Buttons();           
     }
     
     if(bf100msFlag == C_ON)
     {
       bf100msFlag = C_OFF;      
       Read_Joystick(&Joystick_main);
-      Read_Sliders(&Sliders);                  
+      Read_Sliders(&Sliders);
       Move_Selection(&Menu, &Joystick_main);
-      //Oled_Refresh(&Menu);
-      SRAM_Refresh_Menu(&Menu);
-      Oled_Refresh_From_SRAM();
-      //Builds the CAN message with the joystick data
-      Can_Message_Joystick(&CAN_message_send, &Joystick_main);
-      Can_Messsage_Send(&CAN_message_send,BUFFER_0); 
-      //Checks which interrupt occurred on the CAN controller                                       
-      Can_Interrupt_Vect();
-      //Receives a message if an interrupt has occurred
-      Can_Reception(&CAN_message_receive);      
+      //Oled_Refresh(&Menu);                   //Refreshing the OLED from the RAM memory of the microcontroller
+        
+      //Define actions depending on which menu the user is
+      switch (Menu.Menu_to_print)
+      {
+        case MAIN_MENU_ID:
+          SRAM_Refresh_Menu(&Menu);
+          break;
+        case PLAY_MENU_ID:
+          SRAM_Refresh_Menu(&Menu);
+          break;
+        case CONFIG_MENU_ID:
+          SRAM_Refresh_Menu(&Menu);
+          break;
+        case HIGHSCORE_MENU_ID:
+          //Different SRAM_Refresh_Menu(&Menu);
+          SRAM_Refresh_Menu(&Menu);
+          break;
+        case GAME_ON_MENU_ID:
+          //Different SRAM_Refresh_Menu(&Menu);
+          SRAM_Refresh_Menu(&Menu);
+          //On this menu you need to move Servo depending on the joystick
+          //Builds the CAN message with the joystick data
+          Can_Message_Joystick(&CAN_message_send, &Joystick_main);          
+          Can_Messsage_Send(&CAN_message_send,BUFFER_0);
+          //On this menu you need to read if it has scored a goal
+          //Checks which interrupt occurred on the CAN controller
+          Can_Interrupt_Vect();
+          //Receives a message if an interrupt has occurred
+          Can_Reception(&CAN_message_receive);
+          
+          //TODO Read goals from the CAN message received     
+          break;
+        default:
+          break;
+      }
+        //This is just for normal menus
+        //SRAM_Refresh_Menu(&Menu);
+        
+        Oled_Refresh_From_SRAM();                         
     }
     
     if(bf1sFlag == C_ON)
     {
-      bf1sFlag = C_OFF;                  
-      //pinHeartbeat = ~pinHeartbeat;                  
+      bf1sFlag = C_OFF;      
+      pinHeartbeat = ~pinHeartbeat;                  
       if (bfJoyButtFlag == C_ON)
       {
         bfJoyButtFlag = C_OFF;
-        Print_Joystick_Position(&Joystick_main);
+        //Print_Joystick_Position(&Joystick_main);      //Commented because it has printf
         Change_Menu (&Menu);
       }
       
       if (bfLeftButtFlag == C_ON)
       {
         bfLeftButtFlag = C_OFF;
-        //Print_Sliders_Position(&Sliders);
+        //Print_Sliders_Position(&Sliders);            //Commented because it has printf
         //Oled display clean        
         Oled_Clear_Screen();
-        Can_Print_Message(&CAN_message_receive);
+        //Can_Print_Message(&CAN_message_receive);     //Commented because it has printf
       }
       
       if (bfRightButtFlag == C_ON)
@@ -128,8 +158,8 @@ int main(void)
         bfRightButtFlag = C_OFF;        
         //PrintSlidersPosition(&Sliders);                                       
         Can_Messsage_Send(&CAN_message_send,BUFFER_0);                                        
-      }                  
-    }
+      }                        
+    }    
   }
         
   return 0;

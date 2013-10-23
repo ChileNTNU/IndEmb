@@ -21,6 +21,12 @@
 #define MENU_TITLE_POS             (1)
 #define MENU_FIRST_OPTION_POS      (2)
 
+#define MAIN_MENU_ID               (0)
+#define PLAY_MENU_ID               (1)
+#define CONFIG_MENU_ID             (2)
+#define HIGHSCORE_MENU_ID          (3)
+#define GAME_ON_MENU_ID            (4)
+
 /******************************************************************************/
 /* Global variables                                                           */
 /******************************************************************************/
