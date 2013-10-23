@@ -36,7 +36,8 @@ void Move_Selection (struct MenuStruct *ptrMenu, JoyStruct *ptrJoystick)
   MenuLenght = pgm_read_byte(ItemFromMenu);
   //4. Fourth the value has to converted from ascii to normal number by subtracting '0' 
   MenuLenght = MenuLenght - '0';
-    
+  
+  //Move the pointer to another position DOWN  
   if ((ptrJoystick->PrevDir == Neutral) && (ptrJoystick->Dir == Down))
   {
     ptrMenu->SelectedMenu++;
@@ -45,6 +46,8 @@ void Move_Selection (struct MenuStruct *ptrMenu, JoyStruct *ptrJoystick)
       ptrMenu->SelectedMenu = 1;    //Go to the first menu option
     }
   } 
+  
+  //Move the pointer to another position UP
   if ((ptrJoystick->PrevDir == Neutral) && (ptrJoystick->Dir == Up))
   {    
     if (ptrMenu->SelectedMenu == 1)
@@ -56,6 +59,23 @@ void Move_Selection (struct MenuStruct *ptrMenu, JoyStruct *ptrJoystick)
       ptrMenu->SelectedMenu--;
     }
   }
+  
+  //This switch is for selecting fixed options on some menus
+  switch(ptrMenu->Menu_to_print)
+  {
+    case 3:
+      //In case the Menu is the HIGH SCORE one, the only option possible is the fourth one which is BACK
+      ptrMenu->SelectedMenu = 4;
+      break;
+    case 4:
+      //In case the Menu is the PLAYING one, the only option possible is the Third one which is BACK
+      ptrMenu->SelectedMenu = 3;
+      break;
+    default:
+      break;
+  }
+  
+  
 } 
 
 /***************************************************************************//**

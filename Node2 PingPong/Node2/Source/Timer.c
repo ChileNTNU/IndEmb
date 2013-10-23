@@ -36,16 +36,16 @@ void Timer_Init(void)
   //Initialization for the PWM. 
   //The servo needs a high output from 0.9ms to 2.1ms, with a 20ms period
   TCCR1A |= (1 << COM1A1);                      //Clear OC1A on compare match and set at Bottom
-  TCCR1A |= (1 << WGM11) | (1 << WGM10);        //Setting a 10 bits mode
-  TCCR1B |= (1 << WGM12);                       //For setting a 10 bits mode
+  TCCR1A |= (1 << WGM11);                       //Setting to a Fast PWM and a top count to ICR1
+  TCCR1B |= (1 << WGM13) | (1 << WGM12);        //For setting this mode as well
   TCCR1B |= (1 << CS12);                        //Prescaler 256 so we can count until 20ms sharp
   
   //Values for the high time of the PWM
   OCR1AH = 0x00;
-  OCR1AL = CMP_MAX2_1MS;
+  OCR1AL = CMP_1_5MS;    
     
-  //
-    
+  //Set the top value for a 20ms period
+  ICR1 = CMP_TIMER_PWM;  
 }
 
 /***************************************************************************//**

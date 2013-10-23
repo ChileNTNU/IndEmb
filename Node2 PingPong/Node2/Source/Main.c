@@ -22,6 +22,7 @@
 #include "../Header/MCP2515.h"
 #include "../Header/CAN.h"
 #include "../Header/InputOutput.h"
+#include "../Header/ADC.h"
 
 /***************************************************************************//**
  * @brief 	Main software routine
@@ -33,9 +34,15 @@ int main(void)
   //unsigned char a;
   
   CANStruct CAN_message_send =
+  /*
   { 0x41AF,
     6,
     {'A','B','C','D','E', 'F', '0', '0'}
+  };
+  */
+  { 0x41AF,
+    0,
+    {0,0,0,0,0,0,0,0}
   };
   //CAN_message_send.data[0] = 'A';
   CANStruct CAN_message_receive =
@@ -49,6 +56,7 @@ int main(void)
   SPI_Init();  
   IO_Init();
   Timer_Init();
+  ADC_Init();
   EnableInterrupts();
   if (Can_Init() == C_ERROR)
   {
@@ -66,15 +74,28 @@ int main(void)
     if(bf100msFlag == C_ON)
     {
       bf100msFlag = C_OFF;
+      //CAN sending activities
+      Can_Clear_Message(&CAN_message_send);
+      Can_Build_Message (&CAN_message_send);
+      if (CAN_message_send.length != 0)
+      {
+        Can_Messsage_Send(&CAN_message_send,BUFFER_0);
+      }
+      //----------------------
+      //CAN Receiving activities
       Can_Interrupt_Vect();
-      Can_Reception(&CAN_message_receive);
-      Can_Messsage_Send(&CAN_message_send,BUFFER_0);         
+      Can_Reception(&CAN_message_receive);      
+      //----------------------
+      Servo_Position(&CAN_message_receive);
+      ADC_Start_Conversion();
     }  
     if(bf1sFlag == C_ON)
     {
       bf1sFlag = C_OFF;
       pinHeartbeat = ~pinHeartbeat;
-      Can_Print_Message(&CAN_message_receive);
+      Detect_Goal();
+      //Can_Print_Message(&CAN_message_receive);
+      UART_put_char(ADC_goal,NULL);      
     }
   }
   return 0;

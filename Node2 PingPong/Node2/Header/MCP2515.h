@@ -188,8 +188,8 @@ extern volatile unsigned char CAN_Event;
 #define bfTxInt1            CANFlags.Ubit.b3      // Tx flag 1
 #define bfTxInt2            CANFlags.Ubit.b4      // Tx flag 2
 #define bfErrorInt          CANFlags.Ubit.b5      // Error flag
-#define bfWakeUpInt         CANFlags.Ubit.b5      // Wake up flag
-#define bfMessageErrorInt   CANFlags.Ubit.b5      // Message Error Interrupt
+#define bfWakeUpInt         CANFlags.Ubit.b6      // Wake up flag
+#define bfMessageErrorInt   CANFlags.Ubit.b7      // Message Error Interrupt
 
 /******************************************************************************/
 /* Function prototypes                                                        */

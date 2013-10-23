@@ -97,16 +97,16 @@ int main(void)
       //Builds the CAN message with the joystick data
       Can_Message_Joystick(&CAN_message_send, &Joystick_main);
       Can_Messsage_Send(&CAN_message_send,BUFFER_0); 
-      //Checks which interrupt occured on the CAN controller                                       
+      //Checks which interrupt occurred on the CAN controller                                       
       Can_Interrupt_Vect();
-      //Receives a message if an interrupt has occured
-      Can_Reception(&CAN_message_receive);
+      //Receives a message if an interrupt has occurred
+      Can_Reception(&CAN_message_receive);      
     }
     
     if(bf1sFlag == C_ON)
     {
       bf1sFlag = C_OFF;                  
-      pinHeartbeat = ~pinHeartbeat;                  
+      //pinHeartbeat = ~pinHeartbeat;                  
       if (bfJoyButtFlag == C_ON)
       {
         bfJoyButtFlag = C_OFF;

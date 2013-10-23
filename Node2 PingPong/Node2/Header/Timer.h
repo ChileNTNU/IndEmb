@@ -26,9 +26,10 @@ extern volatile union Ubyte_def TimerFlags;
 #define bf1sFlag                TimerFlags.Ubit.b2      // 1 sec flag
 
 //Macros for PWM
-#define CMP_MAX2_1MS            (65)    //Maximum value for 2.1 ms 
-#define CMP_MIN0_9MS            (29)    //Minimum value for 0.9 ms 
-#define CMP_TIMER_PWM           (624)   //Value that the timer has to count for having a period of 20ms sharp
+#define CMP_MAX_2_1MS            (65)    //Maximum value for 2.1 ms 
+#define CMP_1_5MS                (47)     
+#define CMP_MIN_0_9MS            (29)    //Minimum value for 0.9 ms 
+#define CMP_TIMER_PWM           (624)    //Value that the timer has to count for having a period of 20ms sharp
 
 /******************************************************************************/
 /* Macros for the registers                                                   */

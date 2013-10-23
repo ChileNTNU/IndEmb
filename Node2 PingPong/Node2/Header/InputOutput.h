@@ -12,6 +12,7 @@
 /* Include Files                                                              */
 /******************************************************************************/
 #include "../Header/GlobalDef.h"
+#include "../Header/CAN.h"
 
 /******************************************************************************/
 /* Macros for the registers                                                   */
@@ -35,5 +36,6 @@
 /* Function prototypes                                                        */
 /******************************************************************************/
 void IO_Init(void);
+void Servo_Position (CANStruct * Message);
 
 #endif /* INPUTOUTPUT_H_ */

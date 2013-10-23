@@ -10,46 +10,66 @@
 /******************************************************************************/
 #include "../Header/Menus.h"
 
-const char SizeMain[]  PROGMEM = "4";
+//Main menu
+const char SizeMain[]  PROGMEM = "3";
 const char TitleMain[] PROGMEM = "MAIN MENU";
-const char MainOne[]   PROGMEM = "Item 1";
-const char MainTwo[]   PROGMEM = "Item 2";
-const char MainThree[] PROGMEM = "Item 3";
-const char MainFour[]  PROGMEM = "Item 4";
+const char MainOne[]   PROGMEM = "Play";                   //SubA
+const char MainTwo[]   PROGMEM = "Configuration";          //SubB
+const char MainThree[] PROGMEM = "High score";             //SubC
 
-const char SizeSubA[]  PROGMEM = "4";
-const char TitleSubA[] PROGMEM = "SUB MENU1";
-const char SubAOne[]   PROGMEM = "SubItem A1";
-const char SubATwo[]   PROGMEM = "SubItem A2";
-const char SubAThree[] PROGMEM = "SubItem A3";
-const char SubAFour[]  PROGMEM = "BACK";
+//Play menu (SubMenu A)
+const char SizeSubA[]  PROGMEM = "2";
+const char TitleSubA[] PROGMEM = "PING PONG";
+const char SubAOne[]   PROGMEM = "Start";                  //SubA.1
+const char SubATwo[]   PROGMEM = "BACK";             
 
+//Game on (SubMenu A.1)
+const char SizeSubA1[]  PROGMEM = "3";
+const char TitleSubA1[] PROGMEM = "PLAYING";
+const char SubA1One[]   PROGMEM = "Lifes";
+const char SubA1Two[]   PROGMEM = "Time";
+const char SubA1Three[] PROGMEM = "BACK";
+
+//Configuration menu (SubMenu B)
 const char SizeSubB[]  PROGMEM = "4";
-const char TitleSubB[] PROGMEM = "SUB MENU2";
-const char SubBOne[]   PROGMEM = "SubItem B1";
-const char SubBTwo[]   PROGMEM = "SubItem B2";
-const char SubBThree[] PROGMEM = "SubItem B3";
+const char TitleSubB[] PROGMEM = "CONFIGURATION";
+const char SubBOne[]   PROGMEM = "Modify A";
+const char SubBTwo[]   PROGMEM = "Modify B";
+const char SubBThree[] PROGMEM = "Modify C";
 const char SubBFour[]  PROGMEM = "BACK";
+
+//High scores menu (SubMenu C)
+const char SizeSubC[]  PROGMEM = "4";
+const char TitleSubC[] PROGMEM = "HIGH SCORES";
+const char SubCOne[]   PROGMEM = "Emilio    1000s";
+const char SubCTwo[]   PROGMEM = "Tu papi   1000s";
+const char SubCThree[] PROGMEM = "Tu culito 1000s";
+const char SubCFour[]  PROGMEM = "BACK";
 
 const char * const MainMenu[] PROGMEM = {
   SizeMain,           //Menu Size
   TitleMain,          //Menu Title
   MainOne,            //First menu option
   MainTwo,
-  MainThree,
-  MainFour
+  MainThree  
 };
 
-const char * const SubMenu1[] PROGMEM = {
+const char * const SubMenuA[] PROGMEM = {
   SizeSubA,
   TitleSubA,
   SubAOne,
-  SubATwo,
-  SubAThree,
-  SubAFour
+  SubATwo
 };
 
-const char * const SubMenu2[] PROGMEM = {
+const char * const SubMenuA1[] PROGMEM = {
+  SizeSubA1,
+  TitleSubA1,
+  SubA1One,
+  SubA1Two,
+  SubA1Three
+};
+
+const char * const SubMenuB[] PROGMEM = {
   SizeSubB,
   TitleSubB,
   SubBOne,
@@ -58,42 +78,69 @@ const char * const SubMenu2[] PROGMEM = {
   SubBFour
 };
 
+const char * const SubMenuC[] PROGMEM = {
+  SizeSubC,
+  TitleSubC,
+  SubCOne,
+  SubCTwo,
+  SubCThree,
+  SubCFour
+};
+
+
 /*                     
       1         2          1. The data type, a pointer const to char
 ------------ -------       2. Another const pointer to another pointer
 |          | |      |     */
 const char * const * const MenuList[] PROGMEM = {
   MainMenu,
-  SubMenu1,
-  SubMenu2
+  SubMenuA,  
+  SubMenuB,
+  SubMenuC,
+  SubMenuA1
 };
 
 
 
-
+//This are the array the tells us on which menu we are (Control Array)
 const char MainMenuSelect[] PROGMEM = {
-  1, //SubMenu1ID,
-  2, //SubMenu2ID,
-  0, //MainMenuID,
+  1, //SubMenuAid,
+  2, //SubMenuBid,
+  3, //SubMenuCid,
   0  //MainMenuID  
 };
 
-const char Sub1Select[] PROGMEM = {
+const char SubASelect[] PROGMEM = {
+  4, //SubMenuA1,
+  0  //MainMenuID,  
+};
+
+const char SubA1Select[] PROGMEM = {
   0, //MainMenuID,
   0, //MainMenuID,
   0, //MainMenuID,
   0  //MainMenuID
 };
 
-const char Sub2Select[] PROGMEM = {
+const char SubBSelect[] PROGMEM = {
   0, //MainMenuID,
   0, //MainMenuID,
   0, //MainMenuID,
   0  //MainMenuID
 };
 
+const char SubCSelect[] PROGMEM = {
+  0, //MainMenuID,
+  0, //MainMenuID,
+  0, //MainMenuID,
+  0  //MainMenuID
+};
+
+//This is the global list of all menus
 const char * const AllMenuSelect[] PROGMEM = {
-  MainMenuSelect,
-  Sub1Select,
-  Sub2Select  
+  MainMenuSelect,    //0
+  SubASelect,        //1
+  SubBSelect,        //2
+  SubCSelect,        //3
+  SubA1Select        //4
 };

@@ -13,6 +13,7 @@
 #include "../Header/CAN.h"
 #include "../Header/MCP2515.h"
 #include "../Header/UART.h"
+#include "../Header/ADC.h"
 
 /***************************************************************************//**
  * @brief 	Initializes the CAN communication
@@ -33,8 +34,7 @@ char Can_Init(void)
     return C_ERROR;    
   }
   
-  return C_SUCCESS;
-  
+  return C_SUCCESS;  
 }
 
 /***************************************************************************//**
@@ -144,7 +144,7 @@ void Can_Reception(CANStruct * Message_received)
   {
     if (bfRxInt0 == C_ON)
     {
-      Can_Messsage_Receive(Message_received,BUFFER_0);      
+      Can_Messsage_Receive(Message_received,BUFFER_0);           
       bfRxInt0 = C_OFF;
     }
     else if (bfRxInt1 == C_ON)
@@ -197,6 +197,41 @@ void Can_Interrupt_Vect(void)
  }
 }
  
+/***************************************************************************//**
+ * @brief 	Builds the message that is going to be send to the Node 1
+ * @param   Message     CAN message we have to build
+ * @return 	None
+ * @date	  23.10.2013 
+*******************************************************************************/
+void Can_Build_Message(CANStruct * Message)
+{
+ if (bfGoalFlag == C_ON)
+ {
+   bfGoalFlag = C_OFF;
+   Message->length = Message->length + 1;
+   Message->data[0] = 0x01;
+ }
+}
+
+/***************************************************************************//**
+ * @brief 	Clear the CAN message
+ * @param   Message     CAN message
+ * @return 	None
+ * @date	  23.10.2013 
+*******************************************************************************/
+void Can_Clear_Message(CANStruct * Message_to_clear)
+{
+  Message_to_clear->length = 0;
+  Message_to_clear->data[0] = 0;
+  Message_to_clear->data[1] = 0;
+  Message_to_clear->data[2] = 0;
+  Message_to_clear->data[3] = 0;
+  Message_to_clear->data[4] = 0;
+  Message_to_clear->data[5] = 0;
+  Message_to_clear->data[6] = 0;
+  Message_to_clear->data[7] = 0;
+}
+
 /*
 void Can_Error();
 void Can_Transmit_Complete();
