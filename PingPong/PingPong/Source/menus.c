@@ -10,6 +10,21 @@
 /******************************************************************************/
 #include "../Header/Menus.h"
 
+//-------Goals drawings-----
+//Goals items
+const char ZeroGoal[]  PROGMEM = "O O O";
+const char OneGoal[]   PROGMEM = "X O O";
+const char TwoGoal[]   PROGMEM = "X X O";     
+const char ThreeGoal[] PROGMEM = "X X X";     
+
+const char * const GoalsItems[] PROGMEM = {
+  ZeroGoal,
+  OneGoal,
+  TwoGoal, 
+  ThreeGoal
+};
+
+//-------Menu items-----
 //Main menu
 const char SizeMain[]  PROGMEM = "3";
 const char TitleMain[] PROGMEM = "MAIN MENU";
@@ -29,6 +44,11 @@ const char TitleSubA1[] PROGMEM = "PLAYING";
 const char SubA1One[]   PROGMEM = "Lifes";
 const char SubA1Two[]   PROGMEM = "Time";
 const char SubA1Three[] PROGMEM = "BACK";
+
+//Game on (SubMenu A.1.1)
+const char SizeSubA1_1[]  PROGMEM = "1";
+const char TitleSubA1_1[] PROGMEM = "GAME OVER!";
+const char SubA1_1One[]   PROGMEM = "Sorry mate...";
 
 //Configuration menu (SubMenu B)
 const char SizeSubB[]  PROGMEM = "4";
@@ -69,6 +89,12 @@ const char * const SubMenuA1[] PROGMEM = {
   SubA1Three
 };
 
+const char * const SubMenuA1_1[] PROGMEM = {
+  SizeSubA1_1,
+  TitleSubA1_1,
+  SubA1_1One  
+};
+
 const char * const SubMenuB[] PROGMEM = {
   SizeSubB,
   TitleSubB,
@@ -97,12 +123,13 @@ const char * const * const MenuList[] PROGMEM = {
   SubMenuA,  
   SubMenuB,
   SubMenuC,
-  SubMenuA1
+  SubMenuA1,
+  SubMenuA1_1
 };
 
 
-
-//This are the array the tells us on which menu we are (Control Array)
+//--------Control Array-------------
+//This is the array that tells us on which menu we are (Control Array)
 const char MainMenuSelect[] PROGMEM = {
   1, //SubMenuAid,
   2, //SubMenuBid,
@@ -116,6 +143,13 @@ const char SubASelect[] PROGMEM = {
 };
 
 const char SubA1Select[] PROGMEM = {
+  0, //MainMenuID,
+  0, //MainMenuID,
+  0, //MainMenuID,
+  0  //MainMenuID
+};
+
+const char SubA1_1Select[] PROGMEM = {
   0, //MainMenuID,
   0, //MainMenuID,
   0, //MainMenuID,
@@ -142,5 +176,6 @@ const char * const AllMenuSelect[] PROGMEM = {
   SubASelect,        //1
   SubBSelect,        //2
   SubCSelect,        //3
-  SubA1Select        //4
+  SubA1Select,       //4
+  SubA1_1Select      //5
 };

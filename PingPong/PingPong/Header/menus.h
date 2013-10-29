@@ -26,10 +26,12 @@
 #define CONFIG_MENU_ID             (2)
 #define HIGHSCORE_MENU_ID          (3)
 #define GAME_ON_MENU_ID            (4)
+#define GAME_OVER_ID               (5)
 
 /******************************************************************************/
 /* Global variables                                                           */
 /******************************************************************************/
+extern const char * const GoalsItems[];
 extern const char * const * const MenuList[];
 extern const char * const AllMenuSelect[];
 

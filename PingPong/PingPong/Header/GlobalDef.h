@@ -87,6 +87,15 @@ struct MenuStruct
   unsigned char Menu_to_print;
 };
 
+struct TimerStruct
+{
+  unsigned char Enable;
+  unsigned char Usec;
+  unsigned char Dsec;
+  unsigned char Umin;
+  unsigned char Dmin;
+};
+
 typedef struct
 {
 	unsigned int bit0:1;

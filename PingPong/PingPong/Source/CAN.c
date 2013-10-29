@@ -212,6 +212,25 @@ void Can_Interrupt_Vect(void)
    CAN_Event = 0x00;
  }
 }
+
+/***************************************************************************//**
+ * @brief 	Clear the CAN message
+ * @param   Message     CAN message
+ * @return 	None
+ * @date	  23.10.2013 
+*******************************************************************************/
+void Can_Clear_Message(CANStruct * Message_to_clear)
+{
+  Message_to_clear->length = 0;
+  Message_to_clear->data[0] = 0;
+  Message_to_clear->data[1] = 0;
+  Message_to_clear->data[2] = 0;
+  Message_to_clear->data[3] = 0;
+  Message_to_clear->data[4] = 0;
+  Message_to_clear->data[5] = 0;
+  Message_to_clear->data[6] = 0;
+  Message_to_clear->data[7] = 0;
+}
  
 /*
 void Can_Error();

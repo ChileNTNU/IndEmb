@@ -43,6 +43,7 @@ void Can_Reception(CANStruct * Message_received);
 void Can_Print_Message(CANStruct * Message_received);
 void Can_Message_Joystick(CANStruct * Message_to_send, JoyStruct * JoyData);
 void Can_Interrupt_Vect(void);
+void Can_Clear_Message(CANStruct * Message_to_clear);
 
 /*
 void Can_Error(void);

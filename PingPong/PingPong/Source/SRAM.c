@@ -260,7 +260,7 @@ void SRAM_Refresh_Menu(struct MenuStruct * ptrMenu)
  * @return 	None.
  * @date	  23.10.2013 
 *******************************************************************************/
-void SRAM_Refresh_Menu_And_Items(struct MenuStruct * ptrMenu, unsigned int item1, unsigned int item2, unsigned int item3)
+void SRAM_Refresh_Menu_And_Items(struct MenuStruct * ptrMenu, unsigned char * item1, unsigned char * item2, unsigned char * item3, struct TimerStruct * Timer)
 {
   int SRAMaddress;
   unsigned char MenuLenght,i;
@@ -280,11 +280,11 @@ void SRAM_Refresh_Menu_And_Items(struct MenuStruct * ptrMenu, unsigned int item1
   //4. Fourth the value has to converted from ascii to normal number by subtracting '0'
   MenuLenght = MenuLenght - '0';
   
-  //---Clear the Oled screen and go to the first position for printing the Title---
+  //---Clear the SRAM memory and go to the first position, in this case the tittle of the menu---
   SRAM_Clean();  
   SRAMaddress = PAGE1 + 30; //Fifth character, each character has 6 columns
   
-  //---Read the pointer of the title string and print it on the Oled---  
+  //---Read the pointer of the title string and print it on the SRAM---  
   MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
   ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_TITLE_POS]);
     
@@ -298,7 +298,7 @@ void SRAM_Refresh_Menu_And_Items(struct MenuStruct * ptrMenu, unsigned int item1
     //---Check if the menu which is going to be printed is the selected one---
     if (ptrMenu->SelectedMenu == i)
     {
-      SRAM_Store_Font(0xFF,SRAMaddress); //Very last font. In this case the smiley face :)
+      SRAM_Store_Font(0xFF,SRAMaddress); //Very last font of the ascii table. In this case the smiley face :)
     }
     else
     {
@@ -314,6 +314,33 @@ void SRAM_Refresh_Menu_And_Items(struct MenuStruct * ptrMenu, unsigned int item1
     
     //TODO Print the items
     //SRAM_Store_Font(0xFF,SRAMaddress)
+    SRAMaddress = SRAMaddress + 36; //Go to next six characters, in other words jump the word for the option and leave a space
+    //Select which option to print depending on how many goals the game has
+    switch(i)
+    {
+      case 1:
+        //Print the goals
+        ItemFromMenu = (char *) pgm_read_word(&GoalsItems[*item1]);
+        SRAM_Store_String_P((const char *)ItemFromMenu,SRAMaddress);      
+        break;
+      case 2:
+        //Print the timer
+        //Each digital have to be added 0x30 to convert it into ascii for printing it
+        SRAM_Store_Font((Timer->Dmin)+0x30,SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font((Timer->Umin)+0x30,SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font(':',SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font((Timer->Dsec)+0x30,SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font((Timer->Usec)+0x30,SRAMaddress);
+        break;
+      case 3:
+        break;
+      default:
+        break;
+    }
     
     //---Go to the next position of the next menu option        
     SRAMaddress = (PAGE_SIZE * i) + PAGE3 + 12;

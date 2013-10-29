@@ -38,5 +38,6 @@ void SRAM_Store_Page(char * String_to_save, unsigned int Page);
 void SRAM_Store_String_P(const char * pChar_to_print, unsigned int Page);
 void SRAM_Clean(void);
 void SRAM_Refresh_Menu(struct MenuStruct * ptrMenu);
+void SRAM_Refresh_Menu_And_Items(struct MenuStruct * ptrMenu, unsigned char * item1, unsigned char * item2, unsigned char * item3, struct TimerStruct * Timer);
 
 #endif /* SRAM_H_ */

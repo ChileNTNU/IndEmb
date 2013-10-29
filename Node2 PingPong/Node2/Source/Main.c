@@ -23,6 +23,7 @@
 #include "../Header/CAN.h"
 #include "../Header/InputOutput.h"
 #include "../Header/ADC.h"
+#include "../Header/TWI.h"
 
 /***************************************************************************//**
  * @brief 	Main software routine
@@ -31,7 +32,7 @@
 *******************************************************************************/
 int main(void)
 {  
-  //unsigned char a;
+  unsigned char a [3] = {DAC_MAX520_ADDR_WRITE, 0x01, 0x7F};
   
   CANStruct CAN_message_send =
   /*
@@ -57,6 +58,7 @@ int main(void)
   IO_Init();
   Timer_Init();
   ADC_Init();
+  TWI_Master_Initialise();
   EnableInterrupts();
   if (Can_Init() == C_ERROR)
   {
@@ -88,14 +90,15 @@ int main(void)
       //----------------------
       Servo_Position(&CAN_message_receive);
       ADC_Start_Conversion();
+      TWI_Start_Transceiver_With_Data(a,0x03);
     }  
     if(bf1sFlag == C_ON)
     {
       bf1sFlag = C_OFF;
       pinHeartbeat = ~pinHeartbeat;
       Detect_Goal();
-      //Can_Print_Message(&CAN_message_receive);
-      UART_put_char(ADC_goal,NULL);      
+      //Can_Print_Message(&CAN_message_receive);      
+      UART_put_char(ADC_goal,NULL);
     }
   }
   return 0;

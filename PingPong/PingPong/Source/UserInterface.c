@@ -71,11 +71,12 @@ void Move_Selection (struct MenuStruct *ptrMenu, JoyStruct *ptrJoystick)
       //In case the Menu is the PLAYING one, the only option possible is the Third one which is BACK
       ptrMenu->SelectedMenu = 3;
       break;
+    case GAME_OVER_ID:
+      //In case the Menu is the GAME OVER, tha smiley face should not appear. That is why it is on the second option which has no letters
+      ptrMenu->SelectedMenu = 2;      
     default:
       break;
-  }
-  
-  
+  }    
 } 
 
 /***************************************************************************//**
@@ -98,4 +99,68 @@ void Change_Menu (struct MenuStruct *ptrMenu)
   //3. Third you have to read the actual value from flash. This gets you the value
   ptrMenu->Menu_to_print = SelectedMenu;
   ptrMenu->SelectedMenu = 1;  
+}
+
+/***************************************************************************//**
+ * @brief 	Checks if there has been another goal and increases the goals variables.
+ * @param   Message     pointer to the CAN message received
+ * @param   goals       goals variable
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
+void Check_Goals(CANStruct * Message, unsigned char * goals)
+{  
+  //If the CAN message received has something and the first data is a goal detection (1)
+  if ((Message->length != 0) && (Message->data[0] == 1))
+  {
+    Can_Clear_Message(Message);
+    * goals = * goals + 1;    
+  }
+}  
+
+/***************************************************************************//**
+ * @brief 	Increases the timer variables for controlling the game time
+ * @param   Timer      Structure that controls the time for the game
+ * @return 	None.
+ * @date	  16.09.2013 
+*******************************************************************************/
+void Increase_Timer(struct TimerStruct * Timer)
+{
+  if (Timer->Enable == C_ON)
+  {
+    Timer->Usec = Timer->Usec + 1;
+    if (Timer->Usec == 10)
+    {
+      Timer->Usec = 0;
+      Timer->Dsec = Timer->Dsec + 1;
+      if(Timer->Dsec == 6)
+      {
+        Timer->Dsec = 0;
+        Timer->Umin = Timer->Umin + 1;
+        if(Timer->Umin == 10)
+        {
+          Timer->Umin = 0;
+          Timer->Dmin = 0;
+        }
+        if (Timer->Dmin== 6)
+        {
+          Timer->Dmin = 0;
+        }
+      }
+    }
+  }      
+}  
+
+/***************************************************************************//**
+ * @brief 	Reset the timer selected
+ * @param   Timer      Structure of a timer
+ * @return 	None.
+ * @date	  28.10.2013 
+*******************************************************************************/
+void Reset_Timer(struct TimerStruct * Timer)
+{  
+ Timer->Usec = 0;
+ Timer->Dsec = 0;
+ Timer->Umin = 0;
+ Timer->Dmin = 0;
 }
