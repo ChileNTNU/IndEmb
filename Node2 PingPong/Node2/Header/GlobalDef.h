@@ -43,7 +43,7 @@
 #define EnableInterrupts()       __asm__ __volatile__ ("sei" ::: "memory")
 
 //Enum for the joystick data
-enum Direction {Right,Left,Up,Down,Neutral};
+enum Direction {Neutral,Right,Left,Up,Down};
 
 /******************************************************************************/
 /* Unions declarations                                                        */

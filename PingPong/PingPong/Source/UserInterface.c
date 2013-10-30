@@ -112,8 +112,7 @@ void Check_Goals(CANStruct * Message, unsigned char * goals)
 {  
   //If the CAN message received has something and the first data is a goal detection (1)
   if ((Message->length != 0) && (Message->data[0] == 1))
-  {
-    Can_Clear_Message(Message);
+  {    
     * goals = * goals + 1;    
   }
 }  

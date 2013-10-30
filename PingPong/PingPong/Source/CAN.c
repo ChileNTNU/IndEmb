@@ -221,6 +221,7 @@ void Can_Interrupt_Vect(void)
 *******************************************************************************/
 void Can_Clear_Message(CANStruct * Message_to_clear)
 {
+  Message_to_clear->id = 0xFFFF;
   Message_to_clear->length = 0;
   Message_to_clear->data[0] = 0;
   Message_to_clear->data[1] = 0;

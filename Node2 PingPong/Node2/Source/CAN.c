@@ -139,7 +139,7 @@ void Can_Messsage_Receive(CANStruct * Message_to_receive, char Buffer_num)
  * @date	  14.10.2013 
 *******************************************************************************/
 void Can_Reception(CANStruct * Message_received)
-{      
+{        
   if (CANintFlags != 0x00)
   {
     if (bfRxInt0 == C_ON)
@@ -152,7 +152,12 @@ void Can_Reception(CANStruct * Message_received)
       Can_Messsage_Receive(Message_received,BUFFER_1);
       bfRxInt1 = C_OFF;
     }   
-  }    
+  }
+  else
+  {
+    //If there is no interrupt then clear the variable for the message received
+    Can_Clear_Message(Message_received);
+  }       
 }  
 
 /***************************************************************************//**
@@ -221,6 +226,7 @@ void Can_Build_Message(CANStruct * Message)
 *******************************************************************************/
 void Can_Clear_Message(CANStruct * Message_to_clear)
 {
+  Message_to_clear->id = 0xFFFF;
   Message_to_clear->length = 0;
   Message_to_clear->data[0] = 0;
   Message_to_clear->data[1] = 0;
@@ -231,7 +237,6 @@ void Can_Clear_Message(CANStruct * Message_to_clear)
   Message_to_clear->data[6] = 0;
   Message_to_clear->data[7] = 0;
 }
-
 /*
 void Can_Error();
 void Can_Transmit_Complete();

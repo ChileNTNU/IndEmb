@@ -42,7 +42,7 @@
 #define NOP()                    asm("nop")
 #define EnableInterrupts()       __asm__ __volatile__ ("sei" ::: "memory")
 
-enum Direction {Right,Left,Up,Down,Neutral};
+enum Direction {Neutral,Right,Left,Up,Down};
 
 /******************************************************************************/
 /* Unions declarations                                                        */

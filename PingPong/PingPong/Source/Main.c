@@ -141,7 +141,8 @@ int main(void)
             //Receives a message if an interrupt has occurred
             Can_Reception(&CAN_message_receive);
             //Read goals from the CAN message received, and resets the CAN message received
-            Check_Goals(&CAN_message_receive, &goals);              
+            Check_Goals(&CAN_message_receive, &goals);    
+            Can_Clear_Message(&CAN_message_receive);          
           }
           //Different SRAM_Refresh_Menu(&Menu);
           SRAM_Refresh_Menu_And_Items(&Menu, &goals, NULL, NULL, &Timer_game);

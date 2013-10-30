@@ -32,7 +32,9 @@
 *******************************************************************************/
 int main(void)
 {  
-  unsigned char a [3] = {DAC_MAX520_ADDR_WRITE, 0x01, 0x7F};
+  unsigned char a [3] = {DAC_MAX520_ADDR_WRITE, 0x00, 0x7F};
+  unsigned int max_encoder, encoder_position, hola;
+  unsigned char b;
   
   CANStruct CAN_message_send =
   /*
@@ -50,7 +52,6 @@ int main(void)
   { .id = 0x0000,
     .length = 0
   };
-
   
   UART_Init();
   fdevopen(UART_put_char, NULL);  
@@ -64,6 +65,7 @@ int main(void)
   {
     printf("¡MCP2515 not in configuration mode!");
   }
+  Motor_Encoder_Init(&max_encoder);
     
   while(1)
   {
@@ -89,6 +91,7 @@ int main(void)
       Can_Reception(&CAN_message_receive);      
       //----------------------
       Servo_Position(&CAN_message_receive);
+      Move_Motor(&CAN_message_receive);      
       ADC_Start_Conversion();
       TWI_Start_Transceiver_With_Data(a,0x03);
     }  
@@ -97,8 +100,12 @@ int main(void)
       bf1sFlag = C_OFF;
       pinHeartbeat = ~pinHeartbeat;
       Detect_Goal();
-      //Can_Print_Message(&CAN_message_receive);      
+      //Can_Print_Message(&CAN_message_receive);
+      hola = Read_Encoder();
       UART_put_char(ADC_goal,NULL);
+      UART_put_char(0xAA,NULL);
+      UART_put_char((unsigned char)(hola>>8),NULL);
+      UART_put_char((unsigned char)(hola),NULL);      
     }
   }
   return 0;

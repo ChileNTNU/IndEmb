@@ -31,7 +31,7 @@ void Timer_Init(void)
                                                 //Clear Timer on Compare match (CTC) mode & Clock and 1024 prescaler
                                                 //IntOsc = 8MHz
   TIMSK |= (1 << OCIE0);                        //Enable compare interrupt
-  OCR0 = 38;											              //Value for 10ms Interrupt
+  OCR0 = 77;											              //Value for 10ms Interrupt
   
   //Initialization for the PWM. 
   //The servo needs a high output from 0.9ms to 2.1ms, with a 20ms period
