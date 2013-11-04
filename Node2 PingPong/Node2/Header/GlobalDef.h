@@ -88,6 +88,12 @@ struct MenuStruct
   unsigned char Menu_to_print;
 };
 
+struct EncoderStruct
+{
+  unsigned int Min;
+  unsigned int Max;  
+};
+
 typedef struct
 {
 	unsigned int bit0:1;

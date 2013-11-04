@@ -176,9 +176,15 @@ void Read_Sliders(struct SlideStruct * pointer_Sliders)
   Slider_L = (unsigned int)ADC_Read(SLIDER_LEFT);
   Slider_R = (unsigned int)ADC_Read(SLIDER_RIGHT);
   
+  /*The Left one has not to be in percentage because it will be the output to the DAC in Node2
+  And the scale of the DAC is between 0 to 255, which is the implicit range of the ADC
+  //Converts the Sliders value into percentage
   Slider_L = Slider_L * 100;
   Slider_L = Slider_L / 255;
+  */
   
+  //The Right slider has to be in percentage because we will use it for controlling the
+  // position of the motor slider, and because of the K controller percentage is better
   Slider_R = Slider_R * 100;
   Slider_R = Slider_R / 255;
   

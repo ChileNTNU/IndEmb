@@ -32,9 +32,9 @@
 *******************************************************************************/
 int main(void)
 {  
-  unsigned char a [3] = {DAC_MAX520_ADDR_WRITE, 0x00, 0x7F};
-  unsigned int max_encoder, encoder_position, hola;
-  unsigned char b;
+  
+  unsigned int encoder_position;
+  //unsigned char b;
   
   CANStruct CAN_message_send =
   /*
@@ -52,6 +52,8 @@ int main(void)
   { .id = 0x0000,
     .length = 0
   };
+  struct EncoderStruct EncoderValues;
+  
   
   UART_Init();
   fdevopen(UART_put_char, NULL);  
@@ -65,8 +67,8 @@ int main(void)
   {
     printf("¡MCP2515 not in configuration mode!");
   }
-  Motor_Encoder_Init(&max_encoder);
-    
+  Motor_Encoder_Init(&EncoderValues);
+  pinSolenoid = C_OFF;  
   while(1)
   {
     if (bf10msFlag == C_ON)
@@ -81,7 +83,7 @@ int main(void)
       //CAN sending activities
       Can_Clear_Message(&CAN_message_send);
       Can_Build_Message (&CAN_message_send);
-      if (CAN_message_send.length != 0)
+      if (CAN_message_send.length == 0x01)
       {
         Can_Messsage_Send(&CAN_message_send,BUFFER_0);
       }
@@ -90,22 +92,43 @@ int main(void)
       Can_Interrupt_Vect();
       Can_Reception(&CAN_message_receive);      
       //----------------------
+      //Process the CAN message received
       Servo_Position(&CAN_message_receive);
-      Move_Motor(&CAN_message_receive);      
-      ADC_Start_Conversion();
-      TWI_Start_Transceiver_With_Data(a,0x03);
+      Solenoid_Trigger(&CAN_message_receive);
+      Set_Speed(&CAN_message_receive);
+      //Controller for the position
+      encoder_position = Read_Encoder();
+      Move_Motor(&CAN_message_receive);  
+      //ADC is for the infrared    
+      ADC_Start_Conversion();      
     }  
     if(bf1sFlag == C_ON)
     {
       bf1sFlag = C_OFF;
-      pinHeartbeat = ~pinHeartbeat;
+      pinHeartbeat = ~pinHeartbeat;      
       Detect_Goal();
-      //Can_Print_Message(&CAN_message_receive);
-      hola = Read_Encoder();
+      Can_Print_Message(&CAN_message_receive);      
+      
+      encoder_position = Read_Encoder();      
+      
+      /*
+      printf("Goal: ");            
       UART_put_char(ADC_goal,NULL);
-      UART_put_char(0xAA,NULL);
-      UART_put_char((unsigned char)(hola>>8),NULL);
-      UART_put_char((unsigned char)(hola),NULL);      
+      printf("\r\n");
+      */
+      
+      printf("Encoder Max: ");
+      UART_put_char((unsigned char)(EncoderValues.Max>>8),NULL);
+      UART_put_char((unsigned char)(EncoderValues.Max),NULL);
+      printf("\r\n");            
+      printf("Encoder Min: ");
+      UART_put_char((unsigned char)(EncoderValues.Min>>8),NULL);
+      UART_put_char((unsigned char)(EncoderValues.Min),NULL);
+      printf("\r\n");            
+      printf("Encoder Actual: ");
+      UART_put_char((unsigned char)(encoder_position>>8),NULL);
+      UART_put_char((unsigned char)(encoder_position),NULL);      
+      printf("\r\n");            
     }
   }
   return 0;

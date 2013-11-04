@@ -22,8 +22,8 @@ typedef struct{
   unsigned char data[8];
   }CANStruct;
   
-#define JOYSTICK_ID       (0xFF01)
-#define JOYSTICK_LENGTH   (0x02)
+#define NODE_1_ID       (0xFF01)
+#define NODE_1_LENGTH   (0x04)
 
 /******************************************************************************/
 /* Macros for the registers. Made by us                                       */
@@ -41,7 +41,7 @@ char Can_Messsage_Send(CANStruct * Message_to_send, char Buffer_num);
 void Can_Messsage_Receive(CANStruct * Message_to_send, char Buffer_num);
 void Can_Reception(CANStruct * Message_received);
 void Can_Print_Message(CANStruct * Message_received);
-void Can_Message_Joystick(CANStruct * Message_to_send, JoyStruct * JoyData);
+void Can_Message(CANStruct * Message_to_send, JoyStruct * JoyData, struct SlideStruct * SlidersData);
 void Can_Interrupt_Vect(void);
 void Can_Clear_Message(CANStruct * Message_to_clear);
 

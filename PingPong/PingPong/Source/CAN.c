@@ -180,18 +180,23 @@ void Can_Print_Message(CANStruct * Message_received)
 }
 
 /***************************************************************************//**
- * @brief 	Build the CAN message that contains the Joystick data
+ * @brief 	Build the CAN message that contains the Joystick data, the buttons and Sliders data
  * @param   Message_to_send    This is the CAN message which will be sent
  * @param   JoyData            This is the structure containing the Joystick data
+ * @param   SlidersData        This is the structure containing the Sliders data
  * @return 	None
  * @date	  16.10.2013 
 *******************************************************************************/
-void Can_Message_Joystick(CANStruct * Message_to_send, JoyStruct * JoyData)
+void Can_Message(CANStruct * Message_to_send, JoyStruct * JoyData, struct SlideStruct * SlidersData)
 {
-  Message_to_send->id = JOYSTICK_ID;
-  Message_to_send->length = JOYSTICK_LENGTH;
+  Message_to_send->id = NODE_1_ID;
+  Message_to_send->length = NODE_1_LENGTH;
   Message_to_send->data[0] = JoyData->Dir;
   Message_to_send->data[1] = (unsigned char)bfJoyButtFlag;
+  Message_to_send->data[2] = SlidersData->LeftSlider;
+  Message_to_send->data[3] = SlidersData->RightSlider;
+  //Clear the button flag because we have sent the data 
+  bfJoyButtFlag = C_OFF;        
 }
 
 /***************************************************************************//**

@@ -74,7 +74,7 @@ from the slave. Also include how many bytes that should be sent/read including t
 The function will hold execution (loop) until the TWI_ISR has completed with the previous operation,
 then initialize the next operation and return.
 ****************************************************************************/
-void TWI_Start_Transceiver_With_Data( unsigned char *msg, unsigned char msgSize )
+void TWI_Start_Transceiver_With_Data( unsigned char * msg, unsigned char msgSize )
 {
   unsigned char temp;
 

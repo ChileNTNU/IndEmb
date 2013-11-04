@@ -14,6 +14,7 @@
 #include <util/delay.h>
 #include "../Header/InputOutput.h"
 #include "../Header/Timer.h"
+#include "../Header/TWI.h"
 
 /***************************************************************************//**
  * @brief   Initializes all in and outputs
@@ -26,6 +27,10 @@ void IO_Init(void)
   //For the heartbeat
   pinHeartbeatDir = C_OUT;
   pinHeartbeat    = C_LED_OFF;
+  
+  //For the solenoid
+  pinSolenoidDir = C_OUT;
+  pinSolenoid    = C_ON;
   
   //For MotorBox
   //Outputs
@@ -102,6 +107,44 @@ void Servo_Position(CANStruct * Message)
 }
 
 /***************************************************************************//**
+ * @brief   Triggers the solenoid depending on the CAN message received
+ * @param   Message   This is the CAN message coming from Node 1 which contains the Direction of the Joystick
+ * @return 	None
+ * @date	  4.11.2013 
+*******************************************************************************/
+void Solenoid_Trigger(CANStruct * Message)
+{
+  if (Message->data[1] == 0x01)
+  {
+    pinSolenoid = C_OFF;
+  }
+  else
+  {
+    pinSolenoid = C_ON;
+  }
+} 
+
+
+/***************************************************************************//**
+ * @brief   Sets the speed depending on the position of the Left slider
+ * @param   Message   This is the CAN message coming from Node 1 which contains the Direction of the Joystick
+ * @return 	None
+ * @date	  4.11.2013 
+*******************************************************************************/
+void Set_Speed(CANStruct * Message)
+{
+  //Array[0] = Address of the DAC
+  //Array[1] = Select channel from the DAC to be the output
+  //Array[2] = Output value
+  unsigned char TWI_Message_to_DAC [3] = {DAC_MAX520_ADDR_WRITE, 0x00, 0x00};
+  //Just send the data received from Node 1 to the DAC
+  //The data coming from the sliders is already in a range of 0 to 255, which is the same range needed for the DAC
+  TWI_Message_to_DAC[2] = Message->data[2];  
+  TWI_Start_Transceiver_With_Data(TWI_Message_to_DAC,0x03);
+} 
+
+
+/***************************************************************************//**
  * @brief   Reads the encoder 
  * @param   None
  * @return 	Position    it is a 16bits value, which encodes the position
@@ -175,23 +218,30 @@ void Move_Motor(CANStruct * Message)
  * @return 	None
  * @date	  30.10.2013 
 *******************************************************************************/
-void Motor_Encoder_Init(unsigned int * max_encoder)
+void Motor_Encoder_Init(struct EncoderStruct * Encoder)
 {
+  //Define the speed to half speed  
+  unsigned char TWI_Message_to_DAC [3] = {DAC_MAX520_ADDR_WRITE, 0x00, 0x7F};
+  TWI_Start_Transceiver_With_Data(TWI_Message_to_DAC,0x03);
+
   //Move the motor to the left and reset the encoder
-  pinDirMotor = MOTOR_LEFT;
+  pinDirMotor = MOTOR_RIGHT;
   pinEnableMotor = C_ENABLE;
   pinResetEncoder = 0;
   _delay_ms(1000);
-  pinResetEncoder = 1;  
+  pinResetEncoder = 1;    
   
-  //Move the motor to the right and read the encoder to get the max value
-  pinDirMotor = MOTOR_RIGHT;  
+  //Move the motor to the left and read the encoder to get the max value
+  pinDirMotor = MOTOR_LEFT;  
   _delay_ms(1000);  
-  * max_encoder = Read_Encoder();
+  Encoder->Max = Read_Encoder();
+  //Move to the right and read the encoder to get the min value
+  pinDirMotor = MOTOR_RIGHT;  
+  _delay_ms(1000);
+  Encoder->Min = Read_Encoder();    
   
   //Move the motor to the center
   pinDirMotor = MOTOR_LEFT;  
   _delay_ms(250);
-  pinEnableMotor = C_DISABLE;
-  
+  pinEnableMotor = C_DISABLE;  
 }

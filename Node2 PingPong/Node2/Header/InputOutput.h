@@ -26,6 +26,10 @@
 #define pinHeartbeatDir      REGISTER_BIT(DDRD,4)
 #define pinHeartbeat         REGISTER_BIT(PORTD,4)
 
+//The solenoid is active low
+#define pinSolenoidDir       REGISTER_BIT(DDRB,7)
+#define pinSolenoid          REGISTER_BIT(PORTB,7)
+
 //---Outputs for the Motor box
 //Reset active low to reset the encoder
 #define pinResetEncoderDir   REGISTER_BIT(DDRA,6)
@@ -90,8 +94,10 @@
 /******************************************************************************/
 void IO_Init(void);
 void Servo_Position(CANStruct * Message);
+void Solenoid_Trigger(CANStruct * Message);
+void Set_Speed(CANStruct * Message);
 unsigned int Read_Encoder(void);
 void Move_Motor(CANStruct * Message);
-void Motor_Encoder_Init(unsigned int * max_encoder);
+void Motor_Encoder_Init(struct EncoderStruct * Encoder);
 
 #endif /* INPUTOUTPUT_H_ */

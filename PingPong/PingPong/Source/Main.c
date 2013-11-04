@@ -77,7 +77,10 @@ int main(void)
     printf("¡MCP2515 not in configuration mode!");
   }
   
-  Calibrate_Joystick(&Joystick_main) ;
+  Calibrate_Joystick(&Joystick_main);
+  
+  DDRB |= (1<<PB0);
+  PORTB |= (1<<PB0);
   
   while(1)
   {    
@@ -133,7 +136,7 @@ int main(void)
           {
             //On this menu you need to move Servo depending on the joystick
             //Builds the CAN message with the joystick data
-            Can_Message_Joystick(&CAN_message_send, &Joystick_main);
+            Can_Message(&CAN_message_send, &Joystick_main, &Sliders);
             Can_Messsage_Send(&CAN_message_send,BUFFER_0);
             //On this menu you need to read if it has scored a goal
             //Checks which interrupt occurred on the CAN controller
@@ -171,28 +174,32 @@ int main(void)
       pinHeartbeat = ~pinHeartbeat;
       Increase_Timer(&Timer_game);     
       
+      /*
       if (bfJoyButtFlag == C_ON)
       {
         bfJoyButtFlag = C_OFF;
-        //Print_Joystick_Position(&Joystick_main);      //Commented because it has printf
-        Change_Menu(&Menu);
+        //Print_Joystick_Position(&Joystick_main);      //Commented because it has printf        
       }
+      */
       
       if (bfLeftButtFlag == C_ON)
       {
         bfLeftButtFlag = C_OFF;
         //Print_Sliders_Position(&Sliders);            //Commented because it has printf
         //Oled display clean        
-        Oled_Clear_Screen();
+        //Oled_Clear_Screen();
         //Can_Print_Message(&CAN_message_receive);     //Commented because it has printf
+        Change_Menu(&Menu);
       }
       
+      /*
       if (bfRightButtFlag == C_ON)
       {
         bfRightButtFlag = C_OFF;        
-        //PrintSlidersPosition(&Sliders);                                       
+        //Print_Sliders_Position(&Sliders);                                       
         Can_Messsage_Send(&CAN_message_send,BUFFER_0);                                        
-      }                        
+      } 
+      */                       
     }    
   }
         
