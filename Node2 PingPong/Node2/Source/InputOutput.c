@@ -83,13 +83,13 @@ void IO_Init(void)
 
 /***************************************************************************//**
  * @brief   Refreshes the PWM compare value depending on Joystick position
- * @param   Message   This is the CAN message coming from Node 1 which contains the Direction of the Joystick
+ * @param   Position   This is the Direction of the Joystick, which is in the CAN message coming from Node 1
  * @return 	None.
  * @date	  21.10.2013 
 *******************************************************************************/
-void Servo_Position(CANStruct * Message)
+void Servo_Position(unsigned char Position)
 {
-  switch (Message->data[0])
+  switch (Position)
     {
     case Left:
       OCR1A = CMP_MAX_2_1MS;      //Accessing the 16 bit register in just one instruction, instead of High and Low  
@@ -108,13 +108,13 @@ void Servo_Position(CANStruct * Message)
 
 /***************************************************************************//**
  * @brief   Triggers the solenoid depending on the CAN message received
- * @param   Message   This is the CAN message coming from Node 1 which contains the Direction of the Joystick
+ * @param   Selenoid   This is solenoid trigger, which is in the CAN message coming from Node 1
  * @return 	None
  * @date	  4.11.2013 
 *******************************************************************************/
-void Solenoid_Trigger(CANStruct * Message)
+void Solenoid_Trigger(unsigned char Solenoid)
 {
-  if (Message->data[1] == 0x01)
+  if (Solenoid == 0x01)
   {
     pinSolenoid = C_OFF;
   }
@@ -127,11 +127,11 @@ void Solenoid_Trigger(CANStruct * Message)
 
 /***************************************************************************//**
  * @brief   Sets the speed depending on the position of the Left slider
- * @param   Message   This is the CAN message coming from Node 1 which contains the Direction of the Joystick
+ * @param   Speed     This is the speed value we want to set
  * @return 	None
  * @date	  4.11.2013 
 *******************************************************************************/
-void Set_Speed(CANStruct * Message)
+void Set_Speed(unsigned char Speed)
 {
   //Array[0] = Address of the DAC
   //Array[1] = Select channel from the DAC to be the output
@@ -139,7 +139,7 @@ void Set_Speed(CANStruct * Message)
   unsigned char TWI_Message_to_DAC [3] = {DAC_MAX520_ADDR_WRITE, 0x00, 0x00};
   //Just send the data received from Node 1 to the DAC
   //The data coming from the sliders is already in a range of 0 to 255, which is the same range needed for the DAC
-  TWI_Message_to_DAC[2] = Message->data[2];  
+  TWI_Message_to_DAC[2] = Speed;  
   TWI_Start_Transceiver_With_Data(TWI_Message_to_DAC,0x03);
 } 
 
@@ -180,6 +180,22 @@ unsigned int Read_Encoder(void)
 }
 
 /***************************************************************************//**
+ * @brief   Reads the encoder and converts the value into percentage
+ * @param   Encoder     Structure containing the offset and range of the encoder
+ * @return 	None
+ * @date	  30.11.2013 
+*******************************************************************************/
+void Read_Encoder_Percentage(struct EncoderStruct * Encoder)
+{
+  unsigned long encoder_position;
+  encoder_position = (unsigned long) Read_Encoder();
+  encoder_position = encoder_position - Encoder->Offset;
+  encoder_position = encoder_position * 100;
+  encoder_position = encoder_position /Encoder->Range;
+  Encoder->Actual_position = (unsigned char) encoder_position; 
+}
+
+/***************************************************************************//**
  * @brief   Moves the motor
  * @param   Message   This is the CAN message coming from Node 1 which contains the Direction of the Joystick
  * @return 	None.
@@ -212,6 +228,35 @@ void Move_Motor(CANStruct * Message)
   }  
 }
 
+
+/***************************************************************************//**
+ * @brief   Moves the motor based on the controller output
+ * @param   Controller   Structure that contains the controller output
+ * @return 	None.
+ * @date	  30.10.2013 
+*******************************************************************************/
+void Move_Motor_With_Control(struct ControlStruct * Controller)
+{
+  switch (Controller->Motor_Direction)
+    {
+      case Left:
+        pinDirMotor = MOTOR_LEFT;      
+        pinEnableMotor = C_ENABLE;
+        break;
+      case Right:
+        pinDirMotor = MOTOR_RIGHT;
+        pinEnableMotor = C_ENABLE;
+        break;
+      case Neutral:
+        pinEnableMotor = C_DISABLE;
+        break;
+      default:      
+        break;
+    }    
+  
+}
+
+
 /***************************************************************************//**
  * @brief   Does an initialization routine
  * @param   None
@@ -219,26 +264,28 @@ void Move_Motor(CANStruct * Message)
  * @date	  30.10.2013 
 *******************************************************************************/
 void Motor_Encoder_Init(struct EncoderStruct * Encoder)
-{
+{  
+  int max = 0;
   //Define the speed to half speed  
-  unsigned char TWI_Message_to_DAC [3] = {DAC_MAX520_ADDR_WRITE, 0x00, 0x7F};
+  unsigned char TWI_Message_to_DAC [3] = {DAC_MAX520_ADDR_WRITE, 0x00, 0x6F};
   TWI_Start_Transceiver_With_Data(TWI_Message_to_DAC,0x03);
 
   //Move the motor to the left and reset the encoder
   pinDirMotor = MOTOR_RIGHT;
-  pinEnableMotor = C_ENABLE;
+  pinEnableMotor = C_ENABLE;  
+  _delay_ms(2000);
   pinResetEncoder = 0;
-  _delay_ms(1000);
   pinResetEncoder = 1;    
   
   //Move the motor to the left and read the encoder to get the max value
   pinDirMotor = MOTOR_LEFT;  
   _delay_ms(1000);  
-  Encoder->Max = Read_Encoder();
+  max = Read_Encoder();
   //Move to the right and read the encoder to get the min value
   pinDirMotor = MOTOR_RIGHT;  
   _delay_ms(1000);
-  Encoder->Min = Read_Encoder();    
+  Encoder->Offset = Read_Encoder();    
+  Encoder->Range = max - Encoder->Offset;
   
   //Move the motor to the center
   pinDirMotor = MOTOR_LEFT;  

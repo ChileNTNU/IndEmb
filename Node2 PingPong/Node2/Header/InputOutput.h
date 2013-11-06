@@ -93,11 +93,13 @@
 /* Function prototypes                                                        */
 /******************************************************************************/
 void IO_Init(void);
-void Servo_Position(CANStruct * Message);
-void Solenoid_Trigger(CANStruct * Message);
-void Set_Speed(CANStruct * Message);
+void Servo_Position(unsigned char Position);
+void Solenoid_Trigger(unsigned char Solenoid);
+void Set_Speed(unsigned char Speed);
 unsigned int Read_Encoder(void);
+void Read_Encoder_Percentage(struct EncoderStruct * Encoder);
 void Move_Motor(CANStruct * Message);
+void Move_Motor_With_Control(struct ControlStruct * Controller);
 void Motor_Encoder_Init(struct EncoderStruct * Encoder);
 
 #endif /* INPUTOUTPUT_H_ */

@@ -23,8 +23,16 @@ typedef struct{
   }CANStruct;
 
 /******************************************************************************/
-/* Macros for the registers. Made by us                                       */
+/* General comments                                                           */
 /******************************************************************************/
+/*
+Message_to_send->id = NODE_1_ID;
+Message_to_send->length = NODE_1_LENGTH;
+Message_to_send->data[0] = JoyData->Dir;
+Message_to_send->data[1] = (unsigned char)bfJoyButtFlag;
+Message_to_send->data[2] = SlidersData->LeftSlider;   //Desired speed
+Message_to_send->data[3] = SlidersData->RightSlider;  //Desired position
+*/
 
 /******************************************************************************/
 /* Global variables                                                           */

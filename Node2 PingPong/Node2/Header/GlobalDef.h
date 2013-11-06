@@ -90,9 +90,21 @@ struct MenuStruct
 
 struct EncoderStruct
 {
-  unsigned int Min;
-  unsigned int Max;  
+  unsigned int Offset;             //This is the minimum value read
+  unsigned int Range;              //This is the maximum value minus the minimum
+  unsigned char Actual_position;   //Actual position in percentage
 };
+
+struct ControlStruct
+{  
+  signed char   Error;  
+  signed char   LastError;  
+  signed int    LastIntegral;
+  signed int    LastDiff;
+  unsigned char Motor_Direction;
+  unsigned char Speed;
+};
+
 
 typedef struct
 {
