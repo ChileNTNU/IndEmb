@@ -186,7 +186,7 @@ void SRAM_Clean (void)
 }
 
 /***************************************************************************//**
- * @brief 	Saves the current menu in the SRAM
+ * @brief 	Saves the current menu figures in the SRAM
  * @param   ptrMenu    pointer to the menu which is used
  * @return 	None.
  * @date	  23.09.2013 
@@ -252,15 +252,14 @@ void SRAM_Refresh_Menu(struct MenuStruct * ptrMenu)
 }
 
 /***************************************************************************//**
- * @brief 	Saves the current menu and some items in the SRAM
- * @param   ptrMenu    pointer to the menu which is used
- * @param   item1      extra item 1
- * @param   item2      extra item 2
- * @param   item3      extra item 3
+ * @brief 	Saves the current menu and some items in the SRAM. This is for menu GAME_ON
+ * @param   ptrMenu      pointer to the menu which is used
+ * @param   Goals_index  index of which goals to display
+ * @param   Timer        timer for the game
  * @return 	None.
  * @date	  23.10.2013 
 *******************************************************************************/
-void SRAM_Refresh_Menu_And_Items(struct MenuStruct * ptrMenu, unsigned char * item1, unsigned char * item2, unsigned char * item3, struct TimerStruct * Timer)
+void SRAM_Refresh_Menu_GAME_ON(struct MenuStruct * ptrMenu, unsigned char * Goals_index, struct TimerStruct * Timer)
 {
   int SRAMaddress;
   unsigned char MenuLenght,i;
@@ -320,7 +319,7 @@ void SRAM_Refresh_Menu_And_Items(struct MenuStruct * ptrMenu, unsigned char * it
     {
       case 1:
         //Print the goals
-        ItemFromMenu = (char *) pgm_read_word(&GoalsItems[*item1]);
+        ItemFromMenu = (char *) pgm_read_word(&GoalsItems[*Goals_index]);
         SRAM_Store_String_P((const char *)ItemFromMenu,SRAMaddress);      
         break;
       case 2:
@@ -337,6 +336,120 @@ void SRAM_Refresh_Menu_And_Items(struct MenuStruct * ptrMenu, unsigned char * it
         SRAM_Store_Font((Timer->Usec)+0x30,SRAMaddress);
         break;
       case 3:
+        break;
+      default:
+        break;
+    }
+    
+    //---Go to the next position of the next menu option        
+    SRAMaddress = (PAGE_SIZE * i) + PAGE3 + 12;
+  }  
+}
+
+/***************************************************************************//**
+ * @brief 	Saves the current menu and some items in the SRAM. This is for menu HIGH_SCORES
+ * @param   ptrMenu      pointer to the menu which is used
+ * @param   TimerA       timer for highscoreA
+ * @param   TimerB       timer for highscoreB
+ * @param   TimerC       timer for highscoreC
+ * @return 	None.
+ * @date	  23.10.2013 
+*******************************************************************************/
+void SRAM_Refresh_Menu_HIGHSCORES(struct MenuStruct * ptrMenu, struct TimerStruct * TimerA, struct TimerStruct * TimerB, struct TimerStruct * TimerC)
+{
+  int SRAMaddress;
+  unsigned char MenuLenght,i;
+  int * MenuAddress;
+  char * ItemFromMenu;
+  
+  //---Read the length of the menu---
+  //In order to read all the pointers from flash. The steps that have to be done are
+  //1. First read the pointer from the MenuList table. This table has pointer to all the possible menus
+  //   We read 16 bits because all pointer in AVR are 16 bit long
+  MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
+  //2. Second read the pointer from the Menu which is active. From here we obtain the address for the
+  //   corresponding field we want to use
+  ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_SIZE_POS]);
+  //3. Third you have to read the actual value from flash. This gets you the value
+  MenuLenght = pgm_read_byte(ItemFromMenu);
+  //4. Fourth the value has to converted from ascii to normal number by subtracting '0'
+  MenuLenght = MenuLenght - '0';
+  
+  //---Clear the SRAM memory and go to the first position, in this case the tittle of the menu---
+  SRAM_Clean();  
+  SRAMaddress = PAGE1 + 30; //Fifth character, each character has 6 columns
+  
+  //---Read the pointer of the title string and print it on the SRAM---  
+  MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
+  ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_TITLE_POS]);
+    
+  SRAM_Store_String_P((const char *)ItemFromMenu,SRAMaddress);
+  
+  //---Go to the start position of the Menu option---  
+  SRAMaddress = PAGE3 + 12; //Second character, each character has 6 columns
+  
+  for (i = 1; i <= MenuLenght; i++)
+  {
+    //---Check if the menu which is going to be printed is the selected one---
+    if (ptrMenu->SelectedMenu == i)
+    {
+      SRAM_Store_Font(0xFF,SRAMaddress); //Very last font of the ascii table. In this case the smiley face :)
+    }
+    else
+    {
+      SRAM_Store_Font(' ',SRAMaddress);
+    }
+    //---Print the corresponding menu option---
+    MenuAddress = (int *) pgm_read_word(&MenuList[ptrMenu->Menu_to_print]);
+    // The +i-1 is because the index of the option menu is not corresponding to the index of this for loop
+    ItemFromMenu = (char *) pgm_read_word(&MenuAddress[MENU_FIRST_OPTION_POS + i - 1]);
+        
+    SRAMaddress = SRAMaddress + 6; //Go to next character
+    SRAM_Store_String_P((const char *)ItemFromMenu,SRAMaddress);       
+        
+    SRAMaddress = SRAMaddress + 36; //Go to next six characters, in other words jump the word for the option and leave a space
+    //Select which option to print depending on how many goals the game has
+    switch(i)
+    {
+      case 1:
+        //Print the timer A
+        //Each digital has to be added 0x30 to convert it into ascii for printing it
+        SRAM_Store_Font((TimerA->Dmin)+0x30,SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font((TimerA->Umin)+0x30,SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font(':',SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font((TimerA->Dsec)+0x30,SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font((TimerA->Usec)+0x30,SRAMaddress);
+        break;
+      case 2:
+        //Print the timer B
+        //Each digital have to be added 0x30 to convert it into ascii for printing it
+        SRAM_Store_Font((TimerB->Dmin)+0x30,SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font((TimerB->Umin)+0x30,SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font(':',SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font((TimerB->Dsec)+0x30,SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font((TimerB->Usec)+0x30,SRAMaddress);
+        break;
+      case 3:
+        //Print the timer C
+        //Each digital have to be added 0x30 to convert it into ascii for printing it
+        SRAM_Store_Font((TimerC->Dmin)+0x30,SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font((TimerC->Umin)+0x30,SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font(':',SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font((TimerC->Dsec)+0x30,SRAMaddress);
+        SRAMaddress = SRAMaddress + 6;
+        SRAM_Store_Font((TimerC->Usec)+0x30,SRAMaddress);
+        break;
         break;
       default:
         break;

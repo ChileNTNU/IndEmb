@@ -27,6 +27,14 @@ union Ubyte_def ButtonsFlags;
 *******************************************************************************/
 void IO_Init(void)
 {
+  //For the Music pin output
+  pinMusicDir = C_OUT;
+  pinMusic = C_OFF;
+
+  //For the Music debug pin output
+  pinDebugMusicDir = C_OUT;
+  pinDebugMusic = C_OFF;
+
   //For the heartbeat
   pinHeartbeatDir = C_OUT;
   pinHeartbeat    = C_LED_OFF;

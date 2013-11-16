@@ -39,6 +39,7 @@
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
+void Motor_Control_PID(struct ControlStruct * Controller, struct EncoderStruct * Encoder, CANStruct * CAN_Message);
 void Motor_Control(struct ControlStruct * Controller, struct EncoderStruct * Encoder, CANStruct * CAN_Message);
 
 #endif /* CONTROLLER_H_ */

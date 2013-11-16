@@ -12,6 +12,8 @@
 #include <avr/interrupt.h>
 #include "../Header/GlobalDef.h"
 #include "../Header/SPI.h"
+#include "../Header/Timer.h"
+#include <util/delay.h>
 
 /******************************************************************************/
 /* Global Variables                                                           */
@@ -27,7 +29,7 @@ unsigned char SPIRxData = 0;
 void SPI_Init(void)
 { 
   unsigned char dummy_for_reading;
-  //Setting the corresponding pins for SPI functionability
+  //Setting the corresponding pins for SPI functionality
   pinSSmcp2515dir  = C_OUT;
   pinMISOdir       = C_IN;
   pinMOSIdir       = C_OUT;
@@ -61,7 +63,8 @@ void SPI_Init(void)
 void SPI_put_char(unsigned char data_to_send)
 {    
   SPDR = data_to_send;
-  while (bfReg_SPIinterFlag == C_OFF); //Wait until the transmission is complete 
+  _delay_us(10);
+  //while (bfReg_SPIinterFlag == C_OFF); //Wait until the transmission is complete 
 }
   
 /***************************************************************************//**

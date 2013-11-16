@@ -61,9 +61,9 @@ const char SubBFour[]  PROGMEM = "BACK";
 //High scores menu (SubMenu C)
 const char SizeSubC[]  PROGMEM = "4";
 const char TitleSubC[] PROGMEM = "HIGH SCORES";
-const char SubCOne[]   PROGMEM = "Emilio    1000s";
-const char SubCTwo[]   PROGMEM = "Tu papi   1000s";
-const char SubCThree[] PROGMEM = "Tu culito 1000s";
+const char SubCOne[]   PROGMEM = "First";
+const char SubCTwo[]   PROGMEM = "Second";
+const char SubCThree[] PROGMEM = "Third";
 const char SubCFour[]  PROGMEM = "BACK";
 
 const char * const MainMenu[] PROGMEM = {

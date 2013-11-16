@@ -26,6 +26,7 @@
 #define pinMISOpull             REGISTER_BIT(PORTB,6)
 #define pinSCK                  REGISTER_BIT(PORTB,7)
   
+#define bfReg_SPI_WCOL_Flag     REGISTER_BIT(SPSR,6)      // This flag is set when a trying to write to the SPI data reg, during a data transfer
 #define bfReg_SPIinterFlag      REGISTER_BIT(SPSR,7)      // This is the flag which is set when an interrupt occurs
 #define bfReg_SPIinterEnable    REGISTER_BIT(SPCR,7)      // Interrupt enable flag for SPI
 
