@@ -13,14 +13,14 @@
 #include "../Header/InputOutput.h"
 
 /***************************************************************************//**
- * @brief 	Calculates the control output for moving the motor
+ * @brief 	Calculates the control output for moving the motor based on a PID controller
  * @param   Controller   Structure that contains all the controller's variables
  * @param   Encoder      Structure that contains the encoder actual position
  * @param   CAN_Message  Structure that contains desired position
  * @return 	None
  * @date	  06.11.2013 
 *******************************************************************************/
-void Motor_Control(struct ControlStruct * Controller, struct EncoderStruct * Encoder, CANStruct * CAN_Message)
+void Motor_Control_PID(struct ControlStruct * Controller, struct EncoderStruct * Encoder, CANStruct * CAN_Message)
 {
   unsigned char inverted_desired_position, abs_error;
   signed int proportional, integral, diff, temp_diff, total;
@@ -100,3 +100,49 @@ void Motor_Control(struct ControlStruct * Controller, struct EncoderStruct * Enc
   Controller->LastDiff = diff;
   Controller->LastError = Controller->Error;
 } 
+
+/***************************************************************************//**
+ * @brief 	Calculates the control output for moving the motor with out PID
+ * @param   Controller   Structure that contains all the controller's variables
+ * @param   Encoder      Structure that contains the encoder actual position
+ * @param   CAN_Message  Structure that contains desired position
+ * @return 	None
+ * @date	  013.11.2013 
+*******************************************************************************/
+void Motor_Control(struct ControlStruct * Controller, struct EncoderStruct * Encoder, CANStruct * CAN_Message)
+{
+  unsigned char inverted_desired_position, abs_error;
+  inverted_desired_position = 100 - CAN_Message->data[3];
+  Controller->Error = inverted_desired_position - Encoder->Actual_position;
+  
+  //Determine if the motor is with in the threshold position
+  if (Controller->Error < 0)
+  {
+    abs_error = Controller->Error *(-1);
+  }
+  else
+  {
+    abs_error = Controller->Error;
+  }
+  
+  if (abs_error <= POSITION_THRESHOLD)
+  {
+    Controller->Error = 0;
+  }
+  
+  //Set the motor direction
+  if (Controller->Error < 0)
+  {
+    Controller->Motor_Direction = Right;
+  }
+  else if (Controller->Error > 0)
+  {
+    Controller->Motor_Direction = Left;
+  }
+  else
+  {
+    Controller->Motor_Direction = Neutral;
+  }     
+  
+  Controller->Speed = 0x7F;    //Set a fixed speed to half   
+}

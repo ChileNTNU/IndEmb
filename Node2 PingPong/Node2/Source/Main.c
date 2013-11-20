@@ -34,7 +34,7 @@
 int main(void)
 {  
   
-  //unsigned int encoder_position;
+  unsigned int encoder_position;
   //unsigned char b;
   
   CANStruct CAN_message_send =
@@ -115,7 +115,7 @@ int main(void)
       pinHeartbeat = ~pinHeartbeat;      
       Detect_Goal();
       //Can_Print_Message(&CAN_message_receive);            
-      //encoder_position = Read_Encoder();      
+      encoder_position = Read_Encoder();      
       
       /*
       printf("Goal: ");            
@@ -123,15 +123,15 @@ int main(void)
       printf("\r\n");
       */
             
-      /*
+      
       printf("Encoder Range: ");
       UART_put_char((unsigned char)(EncoderValues.Range>>8),NULL);
       UART_put_char((unsigned char)(EncoderValues.Range),NULL);
       printf("\r\n");            
-      */
       
-      /*
-      printf("Encoder Offset: ");
+      
+      
+      printf("Encoder Offset:");
       UART_put_char((unsigned char)(EncoderValues.Offset>>8),NULL);
       UART_put_char((unsigned char)(EncoderValues.Offset),NULL);
       printf("\r\n");            
@@ -150,8 +150,7 @@ int main(void)
       UART_put_char(ControllerValues.Speed,NULL);
       UART_put_char(0xFF,NULL);
       UART_put_char(ControllerValues.Motor_Direction,NULL);            
-      printf("\r\n");                  
-      */
+      printf("\r\n");                        
     }
   }
   return 0;

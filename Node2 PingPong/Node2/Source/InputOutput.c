@@ -143,7 +143,6 @@ void Set_Speed(unsigned char Speed)
   TWI_Start_Transceiver_With_Data(TWI_Message_to_DAC,0x03);
 } 
 
-
 /***************************************************************************//**
  * @brief   Reads the encoder 
  * @param   None
@@ -252,8 +251,7 @@ void Move_Motor_With_Control(struct ControlStruct * Controller)
         break;
       default:      
         break;
-    }    
-  
+    }      
 }
 
 
@@ -267,7 +265,7 @@ void Motor_Encoder_Init(struct EncoderStruct * Encoder)
 {  
   int max = 0;
   //Define the speed to half speed  
-  unsigned char TWI_Message_to_DAC [3] = {DAC_MAX520_ADDR_WRITE, 0x00, 0x6F};
+  unsigned char TWI_Message_to_DAC [3] = {DAC_MAX520_ADDR_WRITE, 0x00, 0x7F};
   TWI_Start_Transceiver_With_Data(TWI_Message_to_DAC,0x03);
 
   //Move the motor to the left and reset the encoder

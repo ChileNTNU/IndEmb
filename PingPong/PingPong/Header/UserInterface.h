@@ -35,5 +35,6 @@ void Change_Menu(struct MenuStruct *ptrMenu);
 void Check_Goals(CANStruct * Message, unsigned char * goals);
 void Increase_Timer(struct TimerStruct * Timer);
 void Reset_Timer(struct TimerStruct * Timer);
+unsigned char Compare_Timers(struct TimerStruct * TimerHigh, struct TimerStruct * TimerLow);
 
 #endif /* USERINTERFACE_H_ */

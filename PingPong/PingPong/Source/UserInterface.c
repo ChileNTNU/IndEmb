@@ -85,7 +85,7 @@ void Move_Selection (struct MenuStruct *ptrMenu, JoyStruct *ptrJoystick)
  * @return 	None.
  * @date	  16.09.2013 
 *******************************************************************************/
-void Change_Menu (struct MenuStruct *ptrMenu)
+void Change_Menu(struct MenuStruct *ptrMenu)
 {  
   char * MenuAddress;
   char SelectedMenu;
@@ -158,8 +158,39 @@ void Increase_Timer(struct TimerStruct * Timer)
 *******************************************************************************/
 void Reset_Timer(struct TimerStruct * Timer)
 {  
+ Timer->Enable = C_OFF;
  Timer->Usec = 0;
  Timer->Dsec = 0;
  Timer->Umin = 0;
  Timer->Dmin = 0;
+}
+
+/***************************************************************************//**
+ * @brief 	Compares and returns if TimerLow is Higher than TimerLow
+ * @param   TimerHigh      Structure of a timer
+ * @param   TimerLow       Structure of a timer
+ * @return 	Comparison     Returns the result of the comparison
+ * @date	  28.10.2013 
+*******************************************************************************/
+unsigned char Compare_Timers(struct TimerStruct * TimerHigh, struct TimerStruct * TimerLow)
+{  
+ unsigned char Comparison = C_FALSE;
+ 
+ if (TimerLow->Dmin > TimerHigh->Dmin)
+ {
+   Comparison = C_TRUE;
+ }
+ else if (TimerLow->Umin > TimerHigh->Umin)
+ {
+   Comparison = C_TRUE;
+ }
+ else if (TimerLow->Dsec > TimerHigh->Dsec)
+ {
+   Comparison = C_TRUE;
+ }
+ else if (TimerLow->Usec > TimerHigh->Usec)
+ {
+   Comparison = C_TRUE;
+ }
+ return Comparison;
 }
