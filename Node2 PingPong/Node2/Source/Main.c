@@ -108,12 +108,13 @@ int main(void)
       Set_Speed(ControllerValues.Speed);
       //ADC is for the infrared    
       ADC_Start_Conversion();      
+      Detect_Goal();
     }  
     if(bf1sFlag == C_ON)
     {
       bf1sFlag = C_OFF;
       pinHeartbeat = ~pinHeartbeat;      
-      Detect_Goal();
+      //Detect_Goal();
       //Can_Print_Message(&CAN_message_receive);            
       encoder_position = Read_Encoder();      
       

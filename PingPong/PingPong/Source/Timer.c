@@ -98,6 +98,11 @@ ISR(TIMER1_COMPA_vect)
   Note_Index = (unsigned char)pgm_read_byte(Address);  
   Max_length =(unsigned char)pgm_read_byte(Address + 1);
   
+  if ((Note_to_play == 0) && (Length_to_play > Max_length))
+  {
+    Length_to_play = 0;
+  }
+  
   if (Max_length == 0)
   {
     Note_to_play = 0;

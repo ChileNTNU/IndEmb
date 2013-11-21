@@ -147,4 +147,6 @@ void EEPROM_Write_All_Timers(struct TimerStruct * Timer_HighA, struct TimerStruc
   EEPROM_Set_HighScore(EEPROM_ADDRESS_1,Timer_HighA);
   EEPROM_Set_HighScore(EEPROM_ADDRESS_2,Timer_HighB);
   EEPROM_Set_HighScore(EEPROM_ADDRESS_3,Timer_HighC);  
+  //Set the flag, which means data is into the EEPROM
+  EEPROM_Write(EEPROM_ADDRESS_FLAG,WRITTEN_FLAG_SET);
 }

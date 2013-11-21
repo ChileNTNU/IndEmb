@@ -181,7 +181,9 @@ int main(void)
             //Wait for 20 times 100ms cycle before going to the Game over screen
             if (counter_delay == 30)
             {
-              Menu.Menu_to_print = GAME_OVER_ID;              
+              Menu.SelectedMenu = 1;   //The game is over, then go to the first option of the list, which has the link to the GAME OVER menu
+              Change_Menu(&Menu);
+              //Menu.Menu_to_print = GAME_OVER_ID;              
               counter_delay = 0;
             }
           }
@@ -209,8 +211,9 @@ int main(void)
           counter_delay++;
           if (counter_delay == 30)
           {
-              Menu.Menu_to_print = PLAY_MENU_ID;//Go to the PLAY menu
-              Menu.SelectedMenu = 1;//Go to the first option of the PLAY menu         
+              Change_Menu(&Menu);
+              //Menu.Menu_to_print = PLAY_MENU_ID;//Go to the PLAY menu
+              //Menu.SelectedMenu = 1;//Go to the first option of the PLAY menu         
               counter_delay = 0;
           }
         default:
@@ -243,6 +246,7 @@ int main(void)
         //Oled_Clear_Screen();
         //Can_Print_Message(&CAN_message_receive);     //Commented because it has printf
         Change_Menu(&Menu);
+        Note_to_play = 0;
       }
       
       /*

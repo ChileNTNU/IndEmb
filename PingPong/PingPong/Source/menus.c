@@ -143,7 +143,7 @@ const char SubASelect[] PROGMEM = {
 };
 
 const char SubA1Select[] PROGMEM = {
-  0, //MainMenuID,
+  5, //SubMenuA1_1,
   0, //MainMenuID,
   0, //MainMenuID,
   0  //MainMenuID
@@ -151,7 +151,7 @@ const char SubA1Select[] PROGMEM = {
 
 const char SubA1_1Select[] PROGMEM = {
   0, //MainMenuID,
-  0, //MainMenuID,
+  1, //SubMenuAid,   The option is the second for the smiley face not to appear.
   0, //MainMenuID,
   0  //MainMenuID
 };
@@ -173,9 +173,9 @@ const char SubCSelect[] PROGMEM = {
 //This is the global list of all menus
 const char * const AllMenuSelect[] PROGMEM = {
   MainMenuSelect,    //0  This leads to define MAIN_MENU_ID as 0
-  SubASelect,        //1
-  SubBSelect,        //2
-  SubCSelect,        //3
-  SubA1Select,       //4
-  SubA1_1Select      //5
+  SubASelect,        //1  This leads to define PLAY_MENU_ID as 1
+  SubBSelect,        //2  This leads to define CONFIG_MENU_ID as 2
+  SubCSelect,        //3  This leads to define HIGHSCORE_MENU_ID as 3
+  SubA1Select,       //4  This leads to define GAME_ON_MENU_ID as 4
+  SubA1_1Select      //5  This leads to define GAME_OVER_ID as 5
 };

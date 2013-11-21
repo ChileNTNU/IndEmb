@@ -25,7 +25,7 @@
 #if ((BAUD_ERROR < 990) || (BAUD_ERROR > 1010))
   #error Error desired baud rate bigger than 1 percent
 #endif
-
+/* adapted from http://www.mikrocontroller.net/articles/AVR-GCC-Tutorial/Der_UART#UART_initialisieren */
 /******************************************************************************/
 /* Macros for the registers                                                   */
 /******************************************************************************/

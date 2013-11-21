@@ -76,7 +76,9 @@ void Detect_Goal(void)
 ISR(ADC_vect)
 {      
   //First get the 15/16 proportion of the old ADC value
-  ADC_goal = ADC_goal - (ADC_goal >> 4);
+  //First get the 7/8 proportion of the old ADC value
+  ADC_goal = ADC_goal - (ADC_goal >> 2);
   //Get the other 16th from the new ADC value and add them.
-  ADC_goal = ADC_goal + (ADCH >> 4); 
+  //Get the other 8th from the new ADC value and add them.
+  ADC_goal = ADC_goal + (ADCH >> 3); 
 }

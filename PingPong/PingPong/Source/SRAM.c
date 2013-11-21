@@ -407,7 +407,7 @@ void SRAM_Refresh_Menu_HIGHSCORES(struct MenuStruct * ptrMenu, struct TimerStruc
     SRAMaddress = SRAMaddress + 6; //Go to next character
     SRAM_Store_String_P((const char *)ItemFromMenu,SRAMaddress);       
         
-    SRAMaddress = SRAMaddress + 36; //Go to next six characters, in other words jump the word for the option and leave a space
+    SRAMaddress = SRAMaddress + 48; //Go to next eight characters, in other words jump the word for the option and leave a space
     //Select which option to print depending on how many goals the game has
     switch(i)
     {
